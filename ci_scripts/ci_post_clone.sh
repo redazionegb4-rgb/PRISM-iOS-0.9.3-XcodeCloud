@@ -50,5 +50,5 @@ if build.isdigit():
 config.write_text(text)
 if not (root / 'PRISM' / 'Web' / 'index.html').is_file():
     raise SystemExit('PRISM: manca PRISM/Web/index.html nel repository.')
-print('PRISM: post-clone completato. Nessuna dipendenza esterna da installare.')
+print('PRISM: post-clone completato. Xcode risolverà Firebase tramite Swift Package Manager.')
 PY

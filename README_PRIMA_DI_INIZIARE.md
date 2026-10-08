@@ -1,36 +1,79 @@
-# PRISM 0.11.4 — Android 28, iOS 18, backend 0.3.3
+# PRISM 0.11.5 — notifiche push
 
-Aggiornare prima il backend, poi le app. Non eliminare database o configurazioni email esistenti.
+Android: versione 0.11.5, codice 29. iOS: versione 0.11.5, build iniziale 19 (Xcode Cloud può usare il proprio numero progressivo). Backend: 0.3.4.
 
-## Backend OVH
-Caricare PRISM-backend-0.3.3.zip in /home/ubuntu con WinSCP. In PuTTY:
+## 1. Aggiornare prima il backend
+
+Caricare `PRISM-backend-0.3.4.zip` in `/home/ubuntu` con WinSCP. In PuTTY:
 
 ```bash
 cd /home/ubuntu
-python3 -m zipfile -e PRISM-backend-0.3.3.zip prism-update-033
-cd /home/ubuntu/prism-update-033/PRISM-backend-restore
+python3 -m zipfile -e PRISM-backend-0.3.4.zip prism-update-034
+cd /home/ubuntu/prism-update-034/PRISM-backend-restore
 sudo bash install.sh
 ```
 
-L'installer conserva la configurazione SMTP e il database, crea un backup, aggiunge la tabella delle storie viste e avvia i controlli API in uno schema isolato. Le vecchie visualizzazioni mai salvate sul server non si possono recuperare: dopo questa versione saranno persistenti.
+L'installer crea un backup, conserva database, configurazione email e `/etc/prism/firebase-admin.json`, aggiunge le tabelle push e riavvia il servizio. Esegue un controllo API in uno schema isolato, senza inviare notifiche ai veri utenti.
 
-## Android
-Installare PRISM-0.11.4.apk sopra la precedente. Stessa firma di sviluppo; per pubblicazione Play Store occorre la firma di produzione.
+Controllo versione:
 
-## iOS / Xcode Cloud / TestFlight
-Estrarre PRISM-iOS-0.11.4-XcodeCloud.zip e aggiornare il repository già collegato a Xcode Cloud, includendo Web, file Swift, Config e ci_scripts. Versione 0.11.4, build 18. Avviare il workflow Archive e distribuzione TestFlight da Xcode Cloud/App Store Connect. Non serve esportare il progetto dal vecchio Mac. La compilazione iOS nativa e la prova su dispositivo devono essere completate tramite Cloud e TestFlight.
+```bash
+curl --fail --silent https://api.prismdating.app/health
+```
 
-## Modifiche
-- Email HTML con logo PRISM incorporato, codice ben visibile e versione testo semplice di compatibilità. Anche il recupero password usa la nuova grafica.
-- Android: FLAG_SECURE per bloccare screenshot e cattura sui display non sicuri; menu foto e download disabilitati.
-- iOS: contenuto nascosto durante registrazione/duplicazione schermo e in background; menu di salvataggio disabilitato; avviso dopo uno screenshot. Le API pubbliche iOS non garantiscono il blocco preventivo degli screenshot. Non viene promesso un divieto assoluto di copia.
-- Storie: visione dal profilo e dalla home salvata sul server. Il cerchio resta spento alla riapertura, ma torna colorato quando ci sono nuove storie non viste.
-- Modifica profilo: frecce sotto ogni foto per riordinare; la prima è la principale. Premere Salva per confermare. I campi compilati restano conservati durante il riordino.
-- “Come appare”: senza foto personali mostra esclusivamente il segnaposto, mai immagini di altri utenti.
+Deve riportare `0.3.4`. La chiave privata Firebase già configurata rimane esclusivamente sulla VPS: non è inclusa nei pacchetti.
 
-## Verifica su due telefoni
-1. Richiedere un nuovo codice email e controllare grafica, codice e consegna.
-2. Guardare una storia dal profilo, chiudere e riaprire l'app; verificare cerchio spento. Pubblicare una nuova storia dall'altro account: deve comparire il cerchio colorato.
-3. Riordinare tre foto, salvare e riaprire; controllare anteprima e profilo dall'altro account. Ripetere senza foto personali.
-4. Android: provare screenshot e registrazione. iPhone: provare registrazione, duplicazione e cambio app; dopo screenshot compare l'avviso, lo scatto non è garantito bloccato.
-5. Verificare chat, invio foto, album e selezione di nuove foto dalla galleria dopo il cambio app.
+## 2. Android
+
+Installare `PRISM-0.11.5.apk` sopra la versione precedente: mantiene la stessa firma di sviluppo. Alla richiesta, consentire le notifiche. Il progetto sorgente ora include Gradle, Firebase Messaging e `google-services.json` per `prism-78dd7`.
+
+Per ricompilare servono JDK 17 e Android SDK 35. Da Windows, nella cartella `prism`: `gradlew.bat :app:assembleRelease`. Su Linux/macOS: `bash build.sh`. L'APK usa la firma di sviluppo per i test; per Play Store serve la propria firma di produzione.
+
+## 3. iOS / Xcode Cloud / TestFlight
+
+Estrarre `PRISM-iOS-0.11.5-XcodeCloud.zip` e aggiornare il repository già collegato a Xcode Cloud. Includere **tutta** la cartella del progetto: `.xcodeproj`, `Config`, `ci_scripts`, `PRISM/Web`, file Swift, `GoogleService-Info.plist` e `PRISM.entitlements`.
+
+Avviare il workflow Archive e distribuzione TestFlight già usato. Xcode Cloud risolverà Firebase tramite Swift Package Manager. Team e bundle sono già configurati: `B8SC92LPR5`, `app.prism.dating`. La capability Push Notifications deve restare abilitata sul tuo identificatore Apple, come appena fatto. La chiave APNs caricata su Firebase non va inserita nel repository.
+
+Non serve esportare dal vecchio Mac. Questo pacchetto contiene il sorgente completo; la compilazione e firma iOS devono essere eseguite su Xcode Cloud. Non sono state eseguite qui una compilazione iOS nativa o una prova APNs su iPhone.
+
+## Funzioni aggiunte
+
+- Push per messaggi (anche risposte alle storie), Tap ricevuti e, se abilitate, visite al profilo.
+- In Privacy e blocchi: autorizzazione telefono e preferenze separate. Messaggi e Tap attivi inizialmente; visite e anteprima disattivate.
+- Le visite inviano un avviso anonimo. Le informazioni sui visitatori restano nella sezione Tap con i limiti del piano.
+- Toccando la notifica si apre la chat oppure Tap ricevuti/visite. Una notifica di un altro account non apre i suoi contenuti.
+- Logout e scadenza della sessione escludono il telefono dall'invio. I blocchi vengono controllati prima dell'invio.
+- In primo piano restano i suoni e i contatori interni già presenti, senza aggiungere una campanella.
+- Invio mediante coda persistente, tentativi successivi per errori temporanei e rimozione dei token dichiarati scaduti da Firebase.
+
+Le correzioni 0.11.4 rimangono: email grafica con codice, storie viste persistenti, riordino foto, anteprima personale e protezioni foto. Su iOS gli screenshot hanno un avviso successivo; il blocco preventivo assoluto non è garantito dalle API pubbliche.
+
+## Prova su due telefoni
+
+1. Aggiornare backend e app; accedere con due account diversi e consentire le notifiche.
+2. Mettere il telefono destinatario in background e bloccare lo schermo. Inviare un messaggio dall'altro account: deve arrivare una notifica PRISM generica con suono. Toccarla: deve aprirsi la chat corretta.
+3. Ripetere con un Tap; toccare la notifica deve aprire Tap ricevuti.
+4. Attivare Visite al profilo sul destinatario e visitarlo dall'altro account: l'avviso deve essere anonimo. Le visite sono limitate a un avviso per visitatore/ora per evitare ripetizioni.
+5. Attivare Anteprima messaggi e ripetere l'invio; poi disattivare Messaggi e verificare che una nuova push messaggio non arrivi. Le preferenze valgono per tutti i telefoni dello stesso account.
+6. Bloccare l'altro account e controllare che non arrivino nuove push da lui. Provare anche logout e cambio account.
+7. Aprire l'app in primo piano: verificare i contatori e i suoni già presenti senza doppio avviso di sistema.
+
+Un avviso già consegnato dal sistema prima di disattivare una preferenza o bloccare qualcuno non può essere richiamato dal server. Su Android, dopo un Arresto forzato dalle impostazioni, riaprire l'app prima di provare le push.
+
+## Se non arrivano
+
+Verificare autorizzazione notifiche e modalità Silenzioso/Non disturbare, poi aprire Privacy e blocchi per controllare lo stato del telefono. Nel progetto Firebase `prism-78dd7` deve essere abilitata Firebase Cloud Messaging API (V1); la chiave APNs di produzione già caricata serve alla build TestFlight.
+
+Controllo server senza mostrare chiavi o token:
+
+```bash
+sudo journalctl -u prism-api -n 60 --no-pager
+sudo -u prism /opt/prism/venv/bin/python -c 'import json; p="/etc/prism/firebase-admin.json"; c=json.load(open(p)); print("Progetto:", c.get("project_id")); print("Chiave presente:", bool(c.get("private_key")))'
+```
+
+Non condividere il contenuto della chiave privata o i token dei telefoni.
+
+## Verifiche eseguite
+
+33 test backend superati; controlli browser sulle interfacce Android/iOS, preferenze con ripristino in caso di errore, apertura notifiche e regressioni delle funzioni precedenti. APK compilato con Firebase e verificato nella firma. File condivisi delle due app identici e archivi controllati. La consegna reale FCM/APNs resta da verificare sui tuoi dispositivi dopo l'aggiornamento.

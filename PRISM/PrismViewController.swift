@@ -3,6 +3,8 @@ import WebKit
 import Security
 import CoreLocation
 import AVFoundation
+import UserNotifications
+import FirebaseMessaging
 
 final class PrismViewController: UIViewController, WKScriptMessageHandlerWithReply, WKNavigationDelegate, WKUIDelegate, CLLocationManagerDelegate, URLSessionTaskDelegate, AVAudioRecorderDelegate {
     private let privacyShield = UIView()
@@ -95,11 +97,17 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         item[kSecAttrAccessible as String] = kSecAttrAccessibleWhenUnlockedThisDeviceOnly
         guard SecItemAdd(item as CFDictionary, nil) == errSecSuccess else { throw SessionError.storage }
     }
-    private func clearToken() { SecItemDelete(tokenQuery() as CFDictionary) }
+    private func clearToken() { SecItemDelete(tokenQuery() as CFDictionary); UserDefaults.standard.removeObject(forKey:"prismPushPending"); UNUserNotificationCenter.current().removeAllDeliveredNotifications() }
     func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage, replyHandler: @escaping (Any?, String?) -> Void) {
         guard message.frameInfo.isMainFrame, let origin = message.frameInfo.request.url,
               origin.isFileURL, origin.path.hasPrefix(webRoot), let body = message.body as? [String: Any], let action = body["action"] as? String else { replyHandler(nil, "Richiesta non valida"); return }
         switch action {
+        case "pushInfo": pushInfo(replyHandler)
+        case "pushEnable":
+            UNUserNotificationCenter.current().requestAuthorization(options:[.alert,.sound,.badge]) { [weak self] granted,_ in
+                DispatchQueue.main.async { if granted { UIApplication.shared.registerForRemoteNotifications() }; self?.pushInfo(replyHandler) }
+            }
+        case "pushConsumed": UserDefaults.standard.removeObject(forKey:"prismPushPending"); replyHandler(["status":200,"data":[:]],nil)
         case "api": api(body, reply: replyHandler)
         case "voiceStart": requestRecording(); replyHandler(["ok": true], nil)
         case "voiceStop": finishRecording(send: true); replyHandler(["ok": true], nil)
@@ -150,6 +158,19 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
                 reply(["status": http.statusCode, "data": payload], nil)
             }
         }.resume()
+    }
+    private func pushInfo(_ reply: @escaping (Any?,String?) -> Void) {
+        let defaults=UserDefaults.standard
+        if defaults.string(forKey:"prismPushID")==nil { defaults.set(UUID().uuidString,forKey:"prismPushID") }
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            DispatchQueue.main.async {
+                let enabled=settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional
+                if enabled { UIApplication.shared.registerForRemoteNotifications() }
+                var data:[String:Any]=["id":defaults.string(forKey:"prismPushID")!,"platform":"ios","token":defaults.string(forKey:"prismPushToken") ?? "","enabled":enabled]
+                if let pending=defaults.dictionary(forKey:"prismPushPending") { data["pending"]=pending }
+                reply(["status":200,"data":data],nil)
+            }
+        }
     }
     func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) { completionHandler(nil) }
     private func startLocation() {
