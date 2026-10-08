@@ -8,6 +8,7 @@ import FirebaseMessaging
 
 final class PrismViewController: UIViewController, WKScriptMessageHandlerWithReply, WKNavigationDelegate, WKUIDelegate, CLLocationManagerDelegate, URLSessionTaskDelegate, AVAudioRecorderDelegate {
     private let privacyShield = UIView()
+    private let protectionLabel = UILabel()
     private var inBackground = false
     private var webView: WKWebView!
     private var recorder: AVAudioRecorder?
@@ -55,7 +56,7 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         privacyShield.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(privacyShield)
         NSLayoutConstraint.activate([privacyShield.leadingAnchor.constraint(equalTo: view.leadingAnchor),privacyShield.trailingAnchor.constraint(equalTo: view.trailingAnchor),privacyShield.topAnchor.constraint(equalTo: view.topAnchor),privacyShield.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
-        let label = UILabel()
+        let label = protectionLabel
         label.text = "PRISM\n\nContenuti protetti\nInterrompi la registrazione o la duplicazione dello schermo per continuare."
         label.textColor = .white
         label.font = .systemFont(ofSize: 20, weight: .medium)
@@ -66,7 +67,6 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         NSLayoutConstraint.activate([label.leadingAnchor.constraint(equalTo: privacyShield.leadingAnchor,constant: 28),label.trailingAnchor.constraint(equalTo: privacyShield.trailingAnchor,constant: -28),label.centerYAnchor.constraint(equalTo: privacyShield.centerYAnchor)])
         privacyShield.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(updateProtection), name: UIScreen.capturedDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(screenshotTaken), name: UIApplication.userDidTakeScreenshotNotification, object: nil)
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         NotificationCenter.default.addObserver(self, selector: #selector(interrupted), name: AVAudioSession.interruptionNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(pause), name: UIScene.willDeactivateNotification, object: nil)
@@ -205,11 +205,11 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) { updateProtection() }
     @objc private func updateProtection() {
         let captured = (view.window?.windowScene?.screen ?? UIScreen.main).isCaptured
+        protectionLabel.text = captured ? "PRISM\n\nContenuti protetti\nInterrompi la registrazione o la duplicazione dello schermo per continuare." : "PRISM"
         privacyShield.isHidden = !inBackground && !captured
         webView.isHidden = inBackground || captured
         webView.evaluateJavaScript("window.prismCaptureChanged&&window.prismCaptureChanged(\(captured ? "true" : "false"))",completionHandler:nil)
     }
-    @objc private func screenshotTaken() { webView.evaluateJavaScript("window.prismScreenshotTaken&&window.prismScreenshotTaken()",completionHandler:nil) }
     func webView(_ webView: WKWebView, contextMenuConfigurationFor elementInfo: WKContextMenuElementInfo, completionHandler: @escaping (UIContextMenuConfiguration?) -> Void) { completionHandler(nil) }
     func webView(_ webView: WKWebView, decidePolicyFor action: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         let url = action.request.url

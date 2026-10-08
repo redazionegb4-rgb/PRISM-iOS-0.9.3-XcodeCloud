@@ -1,6 +1,34 @@
-# PRISM 0.11.6 — notifiche push
+# PRISM 0.11.7 — Huawei e privacy iPhone
 
-Android: versione 0.11.6, codice 30. iOS: versione 0.11.6, build iniziale 22 (Xcode Cloud può usare il proprio numero progressivo). Backend: 0.3.5.
+## Aggiornamento per questa correzione
+Il backend resta 0.3.5: se già installato, non occorre aggiornarlo di nuovo. Installare PRISM-0.11.7.apk sopra la versione precedente e caricare il progetto iOS 0.11.7 completo nel repository Xcode Cloud. Versioni: Android codice 31, iOS build iniziale 23 (numero progressivo gestito dal Cloud).
+
+## Huawei
+Oltre al badge standard Android, viene chiamata l'API di Huawei Home con il totale non letto. Il numero viene aggiornato sia ricevendo push in background sia sincronizzando i dati nell'app, e azzerato al logout. Include il permesso CHANGE_BADGE del launcher. Se il firmware o il launcher alternativo non supporta tale API, le notifiche standard continuano a funzionare.
+
+Controllare nelle impostazioni del telefono i Badge icone app / Icone con badge e attivare PRISM; selezionare numeri, se il sistema offre questa scelta. I nomi variano secondo EMUI. Provare sul launcher Huawei originale. La consegna push già funzionante non cambia.
+
+## iPhone
+- Tolto il messaggio in basso dopo lo screenshot. Il vecchio avviso era successivo allo scatto e non bloccava la foto: non viene più presentato come una protezione dello scatto.
+- Durante cambio app, blocco schermo o app inattiva, la copertura mostra soltanto PRISM, senza dire di interrompere una registrazione inesistente. Le anteprime nel selettore app restano coperte.
+- Durante una vera registrazione o duplicazione schermo resta il messaggio Contenuti protetti; al termine viene ripristinato il contenuto.
+- Il blocco preventivo assoluto degli screenshot su contenuti WKWebView non è garantito dalle API pubbliche iOS. Questa versione corregge gli avvisi e conserva le protezioni effettive; non promette che lo scatto sia impedito.
+- Badge iOS e Package.resolved rimangono inclusi.
+
+## Prova
+1. Huawei: inviare un messaggio dall'altro telefono mentre PRISM è in background, poi verificare il numero sulla home. Leggere il messaggio e verificare decremento; uscire dall'account e verificare zero.
+2. iPhone: fare uno screenshot, non deve apparire il vecchio avviso sotto. Aprire il selettore app: deve vedersi la copertura PRISM, senza messaggi di registrazione. Tornare nell'app: il contenuto deve ricomparire.
+3. iPhone: avviare e fermare registrazione/duplicazione schermo, controllare la copertura e il ripristino.
+
+## Verifiche
+APK compilato con la nuova integrazione e firma verificata; controllo archivi, risorse condivise e lockfile Firebase. La prova Huawei del badge è da effettuare sul dispositivo. La compilazione nativa iOS e la prova del ciclo privacy sono da verificare su Xcode Cloud e TestFlight.
+
+---
+Istruzioni generali di installazione delle push (il backend sotto indicato è già quello della versione precedente):
+
+# PRISM 0.11.7 — notifiche push
+
+Android: versione 0.11.7, codice 31. iOS: versione 0.11.7, build iniziale 23 (Xcode Cloud può usare il proprio numero progressivo). Backend: 0.3.5.
 
 ## 1. Aggiornare prima il backend
 
@@ -25,13 +53,13 @@ Deve riportare `0.3.5`. La chiave privata Firebase già configurata rimane esclu
 
 ## 2. Android
 
-Installare `PRISM-0.11.6.apk` sopra la versione precedente: mantiene la stessa firma di sviluppo. Alla richiesta, consentire le notifiche. Il progetto sorgente ora include Gradle, Firebase Messaging e `google-services.json` per `prism-78dd7`.
+Installare `PRISM-0.11.7.apk` sopra la versione precedente: mantiene la stessa firma di sviluppo. Alla richiesta, consentire le notifiche. Il progetto sorgente ora include Gradle, Firebase Messaging e `google-services.json` per `prism-78dd7`.
 
 Per ricompilare servono JDK 17 e Android SDK 35. Da Windows, nella cartella `prism`: `gradlew.bat :app:assembleRelease`. Su Linux/macOS: `bash build.sh`. L'APK usa la firma di sviluppo per i test; per Play Store serve la propria firma di produzione.
 
 ## 3. iOS / Xcode Cloud / TestFlight
 
-Estrarre `PRISM-iOS-0.11.6-XcodeCloud.zip` e aggiornare il repository già collegato a Xcode Cloud. Includere **tutta** la cartella del progetto: `.xcodeproj`, `Config`, `ci_scripts`, `PRISM/Web`, file Swift, `GoogleService-Info.plist` e `PRISM.entitlements`.
+Estrarre `PRISM-iOS-0.11.7-XcodeCloud.zip` e aggiornare il repository già collegato a Xcode Cloud. Includere **tutta** la cartella del progetto: `.xcodeproj`, `Config`, `ci_scripts`, `PRISM/Web`, file Swift, `GoogleService-Info.plist` e `PRISM.entitlements`.
 
 Avviare il workflow Archive e distribuzione TestFlight già usato. Xcode Cloud risolverà Firebase tramite Swift Package Manager. Team e bundle sono già configurati: `B8SC92LPR5`, `app.prism.dating`. La capability Push Notifications deve restare abilitata sul tuo identificatore Apple, come appena fatto. La chiave APNs caricata su Firebase non va inserita nel repository.
 
