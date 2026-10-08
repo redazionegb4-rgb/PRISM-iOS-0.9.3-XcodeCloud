@@ -36,6 +36,7 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         view.backgroundColor = UIColor(red: 0.067, green: 0.063, blue: 0.086, alpha: 1)
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .default()
+        configuration.applicationNameForUserAgent = "PRISM/0.12.8 (+https://prismdating.app)"
         configuration.allowsInlineMediaPlayback = true
         configuration.mediaTypesRequiringUserActionForPlayback = []
         configuration.userContentController.addScriptMessageHandler(self, contentWorld: .page, name: "prism")
@@ -47,6 +48,7 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         webView.isOpaque = false
         webView.backgroundColor = view.backgroundColor
         webView.scrollView.backgroundColor = view.backgroundColor
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
         webView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(webView)
         NSLayoutConstraint.activate([
@@ -82,12 +84,22 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         privacyShield.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(updateProtection), name: UIScreen.capturedDidChangeNotification, object: nil)
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrame127(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrame127(_:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(interrupted), name: AVAudioSession.interruptionNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(pause), name: UIScene.willDeactivateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(resume), name: UIScene.didActivateNotification, object: nil)
         guard let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "Web") else { return }
         webRoot = url.deletingLastPathComponent().path + "/"
         webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
+    }
+    @objc private func keyboardFrame127(_ notification: Notification) {
+        guard let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+        let local = webView.convert(frame, from: nil)
+        let intersection = webView.bounds.intersection(local)
+        let overlap = intersection.isNull ? 0 : intersection.height
+        let height = max(0, webView.bounds.height - overlap)
+        webView.evaluateJavaScript("window.prismKeyboardChanged127&&window.prismKeyboardChanged127(\(height),\(overlap > 0 ? "true" : "false"))", completionHandler: nil)
     }
     private func tokenQuery() -> [String: Any] {
         [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: "app.prism.dating.online", kSecAttrAccount as String: "session"]
@@ -136,6 +148,13 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
                 self.finishLocation(error: "Posizione non disponibile. Riprova vicino a una finestra.")
             }
             if locationManager.authorizationStatus == .notDetermined { locationManager.requestWhenInUseAuthorization() } else { startLocation() }
+        case "openLocation":
+            guard let latitude = body["latitude"] as? Double, let longitude = body["longitude"] as? Double,
+                  latitude.isFinite, longitude.isFinite, abs(latitude) <= 90, abs(longitude) <= 180,
+                  let url = URL(string: "https://maps.apple.com/?ll=\(latitude),\(longitude)&q=Posizione") else {
+                replyHandler(["status":422,"data":["detail":"Posizione non valida"]],nil); return
+            }
+            UIApplication.shared.open(url) { success in replyHandler(["status":success ? 200 : 0,"data":[:]],nil) }
         case "settings":
             if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
             replyHandler(["ok": true], nil)
