@@ -50,5 +50,32 @@ if build.isdigit():
 config.write_text(text)
 if not (root / 'PRISM' / 'Web' / 'index.html').is_file():
     raise SystemExit('PRISM: manca PRISM/Web/index.html nel repository.')
-print('PRISM: post-clone completato. Xcode risolverà Firebase tramite Swift Package Manager.')
+print('PRISM: configurazione post-clone completata.')
 PY
+
+# Bootstrap the lockfile before Xcode Cloud's strict archive dependency check.
+# These process-local defaults allow this explicit resolution only; they do not
+# change the machine's Xcode preferences or the archive invocation.
+if command -v xcodebuild >/dev/null 2>&1; then
+  echo "PRISM: risoluzione dipendenze Firebase prima dell'archivio…"
+  xcodebuild -resolvePackageDependencies \
+    -project "$PRISM_ROOT/PRISM.xcodeproj" \
+    -scheme PRISM \
+    -IDEPackageOnlyUseVersionsFromResolvedFile=NO \
+    -IDEPackageDisableAutomaticResolution=NO
+  PRISM_RESOLVED="$PRISM_ROOT/PRISM.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
+  if [ ! -s "$PRISM_RESOLVED" ]; then
+    echo "PRISM: risoluzione incompleta, manca Package.resolved."
+    exit 1
+  fi
+  python3 - "$PRISM_RESOLVED" <<'PY'
+import json, sys
+data=json.load(open(sys.argv[1]))
+pins=data.get('pins',data.get('object',{}).get('pins',[]))
+if not any(p.get('identity')=='firebase-ios-sdk' or 'firebase-ios-sdk' in p.get('repositoryURL','') for p in pins):
+    raise SystemExit('PRISM: Firebase non presente nel file delle dipendenze risolte.')
+print('PRISM: Package.resolved pronto; avvio archivio con dipendenze fissate.')
+PY
+else
+  echo "PRISM: Xcode non disponibile su questa macchina; la risoluzione sarà eseguita da Xcode Cloud."
+fi
