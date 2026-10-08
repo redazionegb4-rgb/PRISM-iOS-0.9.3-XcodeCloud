@@ -11,7 +11,7 @@
 | Foto per album | Massimo 6 | Massimo 6 |
 | Visite al profilo | 5 profili più recenti visibili | Tutti i profili visibili |
 
-I raggi di 5 e 50 km sono una scelta iniziale modificabile. Prezzo mensile/annuale da definire. Nessun prodotto a pagamento è stato configurato.
+I raggi di 5 e 50 km sono una scelta iniziale modificabile. Prezzo iniziale proposto: 5,99 € al mese. Nessun prodotto a pagamento è stato configurato.
 
 ## Album e ritorno al Free
 
@@ -51,3 +51,7 @@ Nuovo pulsante Extra nella barra inferiore, avvisi centrali dei limiti che mante
 Tap e visite hanno sezioni Ricevuti, Inviati e Visite. Ogni attività disponibile mostra giorno e orario; per Tap precedenti senza timestamp si legge “Orario non disponibile”, senza inventare una data. Nella demo le visite possono essere caricate solo con un comando esplicitamente dimostrativo. Non sono visite reali di altri utenti.
 
 Nel Free sono visibili i cinque visitatori unici più recenti, dopo avere escluso i profili bloccati. Gli altri hanno foto sfocata e nome riservato, ma distanza e orario sempre leggibili. Le schede riservate aprono l’avviso Extra e non il profilo. Con Extra tutti i visitatori sono visibili. Bloccare un profilo rimuove anche la sua attività. In produzione dati, orari e visibilità devono essere forniti e verificati dal server.
+
+
+## Correzione 0.10.3
+La tua anteprima delle foto/album inviati non consuma la singola apertura e non avvia il timer. Solo i contenuti ricevuti (direction=incoming) usano la visualizzazione unica. I dati eliminati dalle versioni precedenti non sono recuperabili. Diamante neutro nel Free e ambra in Extra. Prezzo mostrato come proposta, senza acquisti attivi; in produzione il prezzo viene letto dallo store.
