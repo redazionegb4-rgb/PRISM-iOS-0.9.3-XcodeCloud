@@ -1,11 +1,13 @@
-PRISM iOS 0.10.3 — TAP, VISITE E NAVIGAZIONE
+PRISM iOS 0.10.4 — TAP, VISITE E NAVIGAZIONE
 
 1. Unisci e sostituisci le cartelle PRISM e ci_scripts nella radice del repository con quelle dello ZIP.
-2. In Config/App.xcconfig modifica solo MARKETING_VERSION = 0.10.3. Conserva DEVELOPMENT_TEAM e PRODUCT_BUNDLE_IDENTIFIER.
+2. In Config/App.xcconfig modifica solo MARKETING_VERSION = 0.10.4. Conserva DEVELOPMENT_TEAM e PRODUCT_BUNDLE_IDENTIFIER.
 3. Fai commit e avvia un nuovo Archive in Xcode Cloud. CI_BUILD_NUMBER deve superare l’ultima build inviata.
-4. Prova la nuova versione 0.10.3 da TestFlight.
+4. Prova la nuova versione 0.10.4 da TestFlight.
 
-Novità 0.10.3: anteprima del mittente senza consumo/apertura o timer, distinzione incoming/outgoing, diamante neutro Free e ambra Extra, prezzo iniziale proposto 5,99 euro/mese senza acquisti attivi. Media eliminati dalle vecchie versioni non recuperabili.
+Novità 0.10.4: profili con Online ora e ultimo accesso offline indicato come simulato; nuova preferenza gratuita Mostra ultimo accesso, persistente e rispettata dall’anteprima personale. Nessun ultimo accesso reale senza backend.
+
+Mantiene: anteprima del mittente senza consumo/apertura o timer, distinzione incoming/outgoing, diamante neutro Free e ambra Extra, prezzo iniziale proposto 5,99 euro/mese senza acquisti attivi. Media eliminati dalle vecchie versioni non recuperabili.
 
 Mantiene: avvisi centrali dei limiti, miniature foto corrette, pulsante Extra nella barra inferiore, barra iOS e margine nativo inferiore corretti; Tap e Visite con orari, cinque visitatori visibili nel Free e restanti sfocati con distanza e ora sempre leggibili. Attività di prova esplicitamente dimostrativa; nessuna visita reale senza backend.
 
