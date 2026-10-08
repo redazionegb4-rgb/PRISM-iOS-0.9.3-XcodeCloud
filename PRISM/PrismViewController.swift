@@ -10,6 +10,7 @@ import StoreKit
 final class PrismViewController: UIViewController, WKScriptMessageHandlerWithReply, WKNavigationDelegate, WKUIDelegate, CLLocationManagerDelegate, URLSessionTaskDelegate, AVAudioRecorderDelegate {
     private var purchaseObserver: Task<Void,Never>?
     private var storeBusy = false
+    private var storeRequestID: UUID?
     private let privacyShield = UIView()
     private let protectionLabel = UILabel()
     private var inBackground = false
@@ -308,9 +309,26 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         let action = body["operation"] as? String ?? "info"
         guard ["info","buy","restore"].contains(action) else { reply(nil,"Azione non valida"); return }
         storeBusy = true
+        let requestID = UUID()
+        storeRequestID = requestID
+        var replied = false
+        let finish: (Any?,String?) -> Void = { value,error in
+            guard !replied else { return }
+            replied = true
+            reply(value,error)
+        }
+        if action == "info" {
+            Task { @MainActor [weak self] in
+                try? await Task.sleep(nanoseconds:25_000_000_000)
+                guard let self = self, !replied, self.storeRequestID == requestID else { return }
+                self.storeBusy = false
+                self.storeRequestID = nil
+                finish(["status":0,"data":["detail":"Apple non ha risposto in tempo. Tocca Riprova caricamento."]],nil)
+            }
+        }
         Task { @MainActor [weak self] in
-            guard let self = self else { reply(nil,"Operazione annullata"); return }
-            defer { self.storeBusy = false }
+            guard let self = self else { finish(nil,"Operazione annullata"); return }
+            defer { if self.storeRequestID == requestID { self.storeBusy = false; self.storeRequestID = nil } }
             do {
                 if action == "restore" {
                     try await AppStore.sync()
@@ -320,12 +338,17 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
                         _ = try await self.verifyStoreTransaction(transaction)
                         await transaction.finish(); restored += 1
                     }
-                    reply(["status":200,"data":["restored":restored]],nil); return
+                    finish(["status":200,"data":["restored":restored]],nil); return
                 }
-                let products = try await Product.products(for:["app.prism.dating.extra.monthly"])
-                guard let product = products.first else { throw StoreFailure.message("PRISM EXTRA non è ancora disponibile sull’App Store.") }
+                var products = try await Product.products(for:["app.prism.dating.extra.monthly"])
+                if action == "info" && products.isEmpty && !replied {
+                    try await Task.sleep(nanoseconds:1_000_000_000)
+                    products = try await Product.products(for:["app.prism.dating.extra.monthly"])
+                }
+                guard !replied else { return }
+                guard let product = products.first else { throw StoreFailure.message("Apple non restituisce ancora PRISM EXTRA. Se hai appena attivato il contratto o modificato il prodotto, attendi e riprova.") }
                 guard let period = product.subscription?.subscriptionPeriod, period.unit == .month, period.value == 1 else { throw StoreFailure.message("Il piano mensile non è disponibile.") }
-                if action == "info" { reply(["status":200,"data":["price":product.displayPrice]],nil); return }
+                if action == "info" { finish(["status":200,"data":["price":product.displayPrice]],nil); return }
                 guard let account = body["user_id"] as? String, let uid = UUID(uuidString:account) else { throw StoreFailure.message("Account PRISM non disponibile. Accedi di nuovo.") }
                 let result = try await product.purchase(options:[.appAccountToken(uid)])
                 switch result {
@@ -333,13 +356,13 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
                     guard case .verified(let transaction) = verification else { throw StoreFailure.message("Acquisto non verificato da Apple.") }
                     let entitlement = try await self.verifyStoreTransaction(transaction)
                     await transaction.finish()
-                    reply(["status":200,"data":["entitlement":entitlement]],nil)
-                case .userCancelled:reply(["status":200,"data":["cancelled":true]],nil)
-                case .pending:reply(["status":200,"data":["pending":true]],nil)
+                    finish(["status":200,"data":["entitlement":entitlement]],nil)
+                case .userCancelled:finish(["status":200,"data":["cancelled":true]],nil)
+                case .pending:finish(["status":200,"data":["pending":true]],nil)
                 @unknown default:throw StoreFailure.message("Acquisto non completato.")
                 }
-            } catch StoreFailure.message(let message) { reply(["status":0,"data":["detail":message]],nil)
-            } catch { reply(["status":0,"data":["detail":"Store temporaneamente non disponibile. Riprova o ripristina gli acquisti."]],nil) }
+            } catch StoreFailure.message(let message) { finish(["status":0,"data":["detail":message]],nil)
+            } catch { finish(["status":0,"data":["detail":"Store temporaneamente non disponibile. Riprova o ripristina gli acquisti."]],nil) }
         }
     }
     deinit { purchaseObserver?.cancel(); voiceTimer?.invalidate(); recorder?.stop(); if let url = voiceURL { try? FileManager.default.removeItem(at: url) }; NotificationCenter.default.removeObserver(self); session.invalidateAndCancel() }
