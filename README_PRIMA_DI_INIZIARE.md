@@ -1,73 +1,66 @@
-# PRISM 0.11.8 — Pannello completo e EXTRA reale
+# PRISM 0.11.9 — Assistenza, sospensioni e foto pubbliche
 
-Backend 0.3.7, Android 0.11.8 (codice 32), iOS 0.11.8 (build 24).
+Versioni: backend 0.3.8, schema 9; Android 0.11.9 (codice 33); iOS 0.11.9 (build iniziale 25, poi numero progressivo Xcode Cloud).
 
-## Aggiornamento della VPS
+## 1. Aggiorna prima la VPS
 
-Carica con WinSCP `PRISM-backend-0.3.7-ADMIN-COMPLETE.zip` in `/home/ubuntu`, poi esegui da PuTTY:
+Con WinSCP carica `PRISM-backend-0.3.8-MODERATION.zip` in `/home/ubuntu`. In PuTTY:
 
 ```bash
 cd /home/ubuntu
-python3 -m zipfile -e PRISM-backend-0.3.7-ADMIN-COMPLETE.zip prism-admin-037
-cd /home/ubuntu/prism-admin-037/PRISM-backend-restore
+python3 -m zipfile -e PRISM-backend-0.3.8-MODERATION.zip prism-admin-038
+cd /home/ubuntu/prism-admin-038/PRISM-backend-restore
 sudo bash install.sh
 ```
 
-L’installatore salva prima il database e il backend, conserva utenti, credenziali email e notifiche, aggiorna lo schema, esegue i test in uno schema isolato e attiva i backup giornalieri. Il backup iniziale comprende database, configurazioni e backend; viene salvato sulla VPS in `/var/backups/prism/daily`, con conservazione di 14 giorni. I backup non vengono trasferiti automaticamente su un altro server.
-
-Attendi la conferma finale dell’installazione. Se compare un errore, conserva il testo dell’errore prima di proseguire.
-
-Se non hai già creato il tuo accesso admin:
-
-```bash
-sudo /opt/prism/venv/bin/python /opt/prism/backend/create_admin.py
-```
-
-Inserisci email, nome e password di almeno 12 caratteri. Le credenziali già create rimangono valide; ripetere questo comando con la stessa email reimposta la password e ripristina il ruolo di titolare.
-
-Apri https://api.prismdating.app/admin. Verifica la versione:
+L'installatore conserva gli account e le configurazioni SMTP, Firebase, database e acquisti già presenti. Esegue un backup prima dell'aggiornamento e un test in uno schema isolato. Il pannello resta su https://api.prismdating.app/admin, con gli stessi amministratori e password.
 
 ```bash
 curl --fail --silent https://api.prismdating.app/health
 ```
 
-Deve riportare `0.3.7`.
+Deve riportare `0.3.8`. Il pacchetto non è stato installato automaticamente sulla VPS.
 
-## Attiva EXTRA manualmente
+## 2. Foto profilo: verifica prima della pubblicazione
 
-1. Apri **Utenti** e cerca la persona per nome o email.
-2. Apri **Scheda utente → Attiva / aggiorna EXTRA**.
-3. Scegli 7, 30, 90 o 365 giorni, oppure senza scadenza.
-4. Inserisci un motivo e conferma.
+Nel pannello apri **Foto da verificare**. Ogni foto del profilo pubblico deve essere approvata dal titolare o da un moderatore. Foto HOT con nudità esplicita e pornografia devono essere rifiutate: non sono ammesse nei profili pubblici.
 
-La durata parte dalla conferma; modificare una concessione ricalcola la scadenza da quel momento. Nelle app 0.11.8 il piano si aggiorna durante la sincronizzazione, senza nuovo login. Il diamante si colora quando EXTRA è attivo.
+**Anche le foto già caricate prima di questo aggiornamento vengono messe in verifica e nascoste agli altri finché non le approvi.** Dopo l'aggiornamento controlla subito questa sezione. Non vengono cancellate dall'account.
 
-EXTRA sblocca due album, raggio fino a 50 km, foto una volta illimitate, conferme di lettura reali e tutti i visitatori nella lista disponibile. Ogni album rimane limitato a sei foto. Alla scadenza il secondo album viene conservato nel database e nascosto, finché EXTRA non viene riattivato.
+- Le foto in attesa o rifiutate restano visibili soltanto al proprietario e agli amministratori autorizzati.
+- Griglia, profili, chat, Tap, visite e preferiti ricevono soltanto foto approvate dal server.
+- Nell'editor app compaiono In verifica / Approvata / Non approvata.
+- La funzione Come appare mostra le sole foto approvate.
+- Riordinare una foto già approvata conserva l'approvazione; un nuovo file richiede una nuova verifica.
+- Una foto rifiutata non viene approvata automaticamente quando viene caricata di nuovo.
+- Gli album privati e le foto inviate in chat non sono esposti al pannello per questo controllo.
 
-Il pulsante **Revoca concessione** rimuove soltanto l’omaggio manuale. Non cancella né rimborsa un abbonamento Apple o Google: se esiste un abbonamento valido, EXTRA resta attivo fino alla sua scadenza.
+Il controllo è **umano, preventivo**. Non è un classificatore automatico della nudità: devi verificare le immagini prima di approvarle. Puoi rifiutare anche una foto già approvata, nascondendola subito nelle risposte successive del server. Una copia già caricata sul dispositivo può rimanere visibile finché il dispositivo aggiorna i dati.
 
-## Nuove sezioni
+## 3. Sospensioni e motivi facoltativi
 
-- **Moderazione:** rimuovi foto pubbliche dalla scheda utente e storie attive dalla sezione dedicata, con motivo registrato.
-- **Assistenza:** richieste aperte, in gestione o chiuse; risposte inviate alla sezione Assistenza PRISM nel profilo dell’app. Le risposte si aggiornano mentre la richiesta è aperta nell’app. Non viene inviata una push separata per le risposte di assistenza in questa versione.
-- **Statistiche:** iscrizioni, utenti verificati attivi nelle ultime 24 ore/30 giorni, EXTRA, abbonamenti store, messaggi, storie e richieste. Gli incassi effettivi restano nei rendiconti Apple e Google.
-- **Amministratori:** Titolare (tutto), Moderatore (utenti, segnalazioni, contenuti, assistenza e statistiche), Assistenza (sole richieste). Solo il titolare assegna EXTRA, elimina account e gestisce amministratori/manutenzione. Cambiare i permessi revoca le sessioni del collaboratore.
-- **Manutenzione:** spazio, dimensione database, stato backup, code email/push, configurazione store ed errori applicativi recenti. Le chiavi e le password non sono mostrate.
+Le note amministrative non sono più obbligatorie per sospendere/riattivare, eliminare account, concedere/revocare EXTRA o rimuovere foto/storie. Rimangono il registro attività e la conferma mediante email per eliminare un account.
 
-Chat e album privati non vengono esposti agli amministratori per la moderazione. La rimozione di una foto pubblica non elimina eventuali copie già inviate privatamente.
+Quando sospendi un utente, il motivo eventualmente scritto viene mostrato nel popup al suo successivo login con credenziali corrette. Se lasci il campo vuoto, appare un messaggio standard. La sospensione revoca le sessioni e nasconde il profilo. Non scrivere nel motivo informazioni interne che non vuoi mostrare all'utente.
 
-## Aggiorna Android
+## 4. Assistenza Android e iOS
 
-Installa `PRISM-0.11.8.apk` sopra la versione attuale. Mantiene lo stesso identificativo e la firma delle build di prova precedenti. È incluso anche `PRISM-Android-source-0.11.8.zip`.
+Rifatti il pulsante Assistenza PRISM nel profilo, l'elenco richieste, il modulo Nuova richiesta e la conversazione con il team. Pulsanti scuri/oro coerenti, testo leggibile, stato della richiesta, campi da 16px per evitare lo zoom automatico su iPhone. Oggetto, messaggi e motivi sono mostrati come testo e non come HTML.
 
-## Aggiorna iOS con Xcode Cloud
+Le risposte del pannello compaiono nell'app mentre la richiesta è aperta. Una richiesta chiusa non accetta altre risposte: l'utente può aprirne una nuova. Non è stata aggiunta una push separata per l'assistenza.
 
-Usa `PRISM-iOS-0.11.8-XcodeCloud.zip`. Sostituisci nel repository il progetto completo, mantenendo `ci_scripts`, le risorse Web, Firebase e `Package.resolved`, come per le versioni precedenti. Avvia Archive in Xcode Cloud e distribuisci la build 24 con TestFlight. Non occorre compilare o trasferire una build dal tuo Mac.
+## 5. Aggiorna le app
 
-Android è stato compilato. Il progetto iOS e i file di configurazione sono stati controllati; la compilazione e la prova StoreKit sul dispositivo devono essere effettuate con Xcode Cloud/TestFlight.
+Android: installa `PRISM-0.11.9.apk` sopra la versione attuale. Stesso identificativo e firma delle build precedenti. Sorgenti completi: `PRISM-Android-source-0.11.9.zip`.
 
-## Acquisti store
+iOS: estrai `PRISM-iOS-0.11.9-XcodeCloud.zip`, sostituisci i file nel repository già collegato a Xcode Cloud mantenendo progetto, Config, PRISM, ci_scripts e Package.resolved. Esegui commit e avvia una nuova Archive sul nuovo commit. Distribuisci con TestFlight. Non serve compilare o esportare dal vecchio Mac.
 
-Acquisto, ripristino e verifica server sono implementati, ma i pulsanti restano disabilitati finché non configuri i prodotti e le credenziali. EXTRA manuale funziona subito dopo l’aggiornamento. Segui `PRISM-EXTRA-STORE-CONFIGURAZIONE.md` per completare la configurazione degli store e i test di acquisto.
+## 6. Acquisto EXTRA dalle app
 
-Il pacchetto non è stato installato automaticamente sulla tua VPS. I test unitari del backend, l’integrazione PostgreSQL 16/PostGIS e i flussi UI sono stati verificati prima della consegna.
+Acquisto, ripristino, gestione abbonamento e verifica server Apple/Google sono presenti. Il prezzo è quello restituito dallo store; l'app non simula pagamenti. EXTRA viene concesso soltanto dopo verifica del server e abbinamento all'account PRISM.
+
+Per rendere disponibile il pagamento devi creare i prodotti, attivare le credenziali sulla VPS e provare gli acquisti negli ambienti store. Segui **PRISM-EXTRA-STORE-0.11.9.md**. Senza quelle configurazioni la pagina mostra che gli acquisti non sono ancora disponibili. L'attivazione manuale dal pannello continua a funzionare senza credenziali store.
+
+## Verifica
+
+58 test unitari superati; integrazione PostgreSQL 16/PostGIS superata, compresi moderazione preventiva, approvazione/rifiuto, mancata ripubblicazione di una foto rifiutata, motivi facoltativi e popup sospensione. Interfacce app verificate a 320–430px, pannello a 320–1440px. APK compilato e risorse confrontate con i sorgenti. Le prove UI del pagamento usano uno store simulato per verificare il collegamento dei pulsanti; non dimostrano un pagamento reale. iOS richiede compilazione con Xcode Cloud e prove StoreKit/TestFlight; acquisti reali Apple/Google richiedono configurazione e test negli store.
