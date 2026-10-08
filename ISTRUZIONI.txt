@@ -1,11 +1,13 @@
-PRISM iOS 0.10.1 — FREE/EXTRA E HEADER
+PRISM iOS 0.10.2 — TAP, VISITE E NAVIGAZIONE
 
 1. Unisci e sostituisci le cartelle PRISM e ci_scripts nella radice del repository con quelle dello ZIP.
-2. In Config/App.xcconfig modifica solo MARKETING_VERSION = 0.10.1. Conserva DEVELOPMENT_TEAM e PRODUCT_BUNDLE_IDENTIFIER.
+2. In Config/App.xcconfig modifica solo MARKETING_VERSION = 0.10.2. Conserva DEVELOPMENT_TEAM e PRODUCT_BUNDLE_IDENTIFIER.
 3. Fai commit e avvia un nuovo Archive in Xcode Cloud. CI_BUILD_NUMBER deve superare l’ultima build inviata.
-4. Prova la nuova versione 0.10.1 da TestFlight.
+4. Prova la nuova versione 0.10.2 da TestFlight.
 
-Novità 0.10.1: confronto Free/Extra con modalità demo senza acquisti; Free con due foto una sola volta al giorno, un album e raggio 5 km; Extra con foto illimitate, due album e raggio 50 km. Il secondo album resta salvato ma nascosto nel Free. Conferme di lettura previste, non operative senza destinatari reali. Header senza numero versione e filtri compatti. Specifica dettagliata nel documento allegato.
+Novità 0.10.2: avvisi centrali dei limiti, miniature foto corrette, pulsante Extra nella barra inferiore, barra iOS e margine nativo inferiore corretti; Tap e Visite con orari, cinque visitatori visibili nel Free e restanti sfocati con distanza e ora sempre leggibili. Attività di prova esplicitamente dimostrativa; nessuna visita reale senza backend.
+
+Mantiene il confronto Free/Extra con modalità demo senza acquisti; Free con due foto una sola volta al giorno, un album e raggio 5 km; Extra con foto illimitate, due album e raggio 50 km. Il secondo album resta salvato ma nascosto nel Free. Conferme di lettura previste, non operative senza destinatari reali. Header senza numero versione e filtri compatti. Specifica dettagliata nel documento allegato.
 
 Mantiene: pagina Vicino a te ridisegnata, Tutti/Online/Preferiti compatti, aggiornamento tirando verso il basso (con indicatore e gestione annullamento), ricerca raggio aggiornata, privacy con interruttori e lista bloccati, conferma sblocco. La proposta PRISM Plus è solo una valutazione, senza acquisti attivi.
 

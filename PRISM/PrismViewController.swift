@@ -37,7 +37,7 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
             webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            webView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         NotificationCenter.default.addObserver(self, selector: #selector(interrupted), name: UIScene.willDeactivateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(interrupted), name: AVAudioSession.interruptionNotification, object: nil)
