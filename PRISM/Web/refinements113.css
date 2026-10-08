@@ -57,3 +57,9 @@
 .sounds113 .privacyrow100 small{font-size:10px;line-height:1.6;color:#ad96ba;margin-top:5px}
 .sounds113 .privacyrow100 input{flex:0 0 22px;width:22px;height:22px;margin-left:10px}
 @media(prefers-reduced-motion:reduce){.swiperow95 .chatrow5{transition:none}}
+img{-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
+.editphoto98{overflow:visible;margin-bottom:40px}
+.reorder114{position:absolute;top:100%;left:0;right:0;height:36px;display:flex;align-items:center;justify-content:space-between;background:#292231;border-radius:0 0 12px 12px}
+.reorder114 button{width:40px;height:36px;padding:0;background:transparent;border:0;color:#efbd79;font-size:20px}
+.reorder114 button:disabled{opacity:.25}
+.reorder114 span{font-size:12px;color:#bfb2c7}

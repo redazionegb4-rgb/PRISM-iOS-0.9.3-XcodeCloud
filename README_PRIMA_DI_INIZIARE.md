@@ -1,49 +1,36 @@
-# PRISM 0.11.3 — social, chat e attività riconoscibili
+# PRISM 0.11.4 — Android 28, iOS 18, backend 0.3.3
 
-Mantiene la grafica e le funzioni della versione completa precedente, la verifica email con codice e i salvataggi sul server.
+Aggiornare prima il backend, poi le app. Non eliminare database o configurazioni email esistenti.
 
-## Aggiorna prima il server
-
-Scarica PRISM-backend-0.3.2.zip e caricalo con WinSCP nella cartella `/home/ubuntu` della VPS. In PuTTY esegui:
+## Backend OVH
+Caricare PRISM-backend-0.3.3.zip in /home/ubuntu con WinSCP. In PuTTY:
 
 ```bash
 cd /home/ubuntu
-python3 -m zipfile -e PRISM-backend-0.3.2.zip prism-update-032
-cd /home/ubuntu/prism-update-032/PRISM-backend-restore
+python3 -m zipfile -e PRISM-backend-0.3.3.zip prism-update-033
+cd /home/ubuntu/prism-update-033/PRISM-backend-restore
 sudo bash install.sh
 ```
 
-L'installer mantiene gli account, il database e la configurazione SMTP esistenti, crea un backup e include tutte le migrazioni precedenti. Il backend restituisce ora lo stato letto/non letto su ogni Tap ricevuto e visita, compresi quelli fuori dai primi venti avvisi. Non basta aggiornare solo le app: questa informazione richiede il nuovo backend.
-
-L'ultima riga deve essere «Aggiornamento PRISM 0.3.2 completato e test isolato superato». Il server non è stato aggiornato da remoto. Il test SQL isolato dell'installer verifica anche gli stati Nuovo/letti e la conservazione degli eventi arrivati dopo l'ultimo elenco visualizzato, senza inviare email esterne o modificare i dati reali.
+L'installer conserva la configurazione SMTP e il database, crea un backup, aggiunge la tabella delle storie viste e avvia i controlli API in uno schema isolato. Le vecchie visualizzazioni mai salvate sul server non si possono recuperare: dopo questa versione saranno persistenti.
 
 ## Android
+Installare PRISM-0.11.4.apk sopra la precedente. Stessa firma di sviluppo; per pubblicazione Play Store occorre la firma di produzione.
 
-Installa PRISM-0.11.3.apk sopra la precedente versione. Package `app.prism.dating`, versionCode 27, stessa firma di sviluppo. Nel pacchetto Android-source ci sono i sorgenti completi e lo script di compilazione.
-
-## iPhone / Xcode Cloud
-
-Estrai PRISM-iOS-0.11.3-XcodeCloud.zip e aggiorna nel repository le cartelle PRISM, Config, ci_scripts e PRISM.xcodeproj mantenendo la struttura. Versione 0.11.3, build locale 17; CI_BUILD_NUMBER del workflow prevale e deve superare l'ultima build già caricata. Team B8SC92LPR5, bundle `app.prism.dating`.
-
-Usa il workflow Archive/TestFlight già configurato. Non serve compilare o trasferire dal vecchio Mac. La compilazione e la prova nativa iPhone rimangono da eseguire tramite Xcode Cloud/TestFlight.
+## iOS / Xcode Cloud / TestFlight
+Estrarre PRISM-iOS-0.11.4-XcodeCloud.zip e aggiornare il repository già collegato a Xcode Cloud, includendo Web, file Swift, Config e ci_scripts. Versione 0.11.4, build 18. Avviare il workflow Archive e distribuzione TestFlight da Xcode Cloud/App Store Connect. Non serve esportare il progetto dal vecchio Mac. La compilazione iOS nativa e la prova su dispositivo devono essere completate tramite Cloud e TestFlight.
 
 ## Modifiche
+- Email HTML con logo PRISM incorporato, codice ben visibile e versione testo semplice di compatibilità. Anche il recupero password usa la nuova grafica.
+- Android: FLAG_SECURE per bloccare screenshot e cattura sui display non sicuri; menu foto e download disabilitati.
+- iOS: contenuto nascosto durante registrazione/duplicazione schermo e in background; menu di salvataggio disabilitato; avviso dopo uno screenshot. Le API pubbliche iOS non garantiscono il blocco preventivo degli screenshot. Non viene promesso un divieto assoluto di copia.
+- Storie: visione dal profilo e dalla home salvata sul server. Il cerchio resta spento alla riapertura, ma torna colorato quando ci sono nuove storie non viste.
+- Modifica profilo: frecce sotto ogni foto per riordinare; la prima è la principale. Premere Salva per confermare. I campi compilati restano conservati durante il riordino.
+- “Come appare”: senza foto personali mostra esclusivamente il segnaposto, mai immagini di altri utenti.
 
-- Social: righe compatte distanziate, icona su un piccolo fondo, nome della piattaforma e username distinti. La stessa grafica viene usata nel proprio profilo, nell'anteprima e nei profili degli altri. I nomi lunghi vanno a capo senza uscire dal riquadro.
-- Chat: riquadri con bordo continuo e fondo uniforme, avatar, nome, anteprima e orario allineati. Il contatore dei messaggi non letti ha uno spazio dedicato. Lo swipe a sinistra per eliminare resta disponibile e non si richiude a causa di un aggiornamento in arrivo.
-- Aggiornamento: suono breve dedicato dopo un aggiornamento manuale della griglia completato. Nessun suono di successo se la posizione o la connessione falliscono, né a ogni aggiornamento automatico.
-- Avvisi: rimossi campanella, pagina Notifiche e banner aggiunti nella 0.11.2. Rimangono i suoni per nuove attività e i numeri sulle icone Tap/Chat e sulle conversazioni. I suoni si possono disattivare in Profilo → Privacy e profili bloccati → Suoni dell'app.
-- Tap ricevuti e visite: etichetta «Nuovo», riga evidenziata e gruppi «Nuovi» / «Già visti». Ogni scheda mostra il proprio numero di nuove attività. Aprire la scheda non cancella immediatamente l'indicazione.
-- Premi «Segna come letti» per togliere l'evidenziazione: lo stato viene salvato sul server e resta dopo una riapertura o l'accesso da un altro dispositivo. La lettura dei Tap non cancella le visite e viceversa. Se arrivano nuove attività dopo l'elenco che stavi leggendo, non vengono segnate come lette insieme alle precedenti.
-- Tap inviati: evidenziato «Ultimo inviato», con data e orario e attesa prima del prossimo invio. Non vengono conteggiati come notifiche ricevute.
-- Anche le visite riservate oltre le cinque del piano Free mostrano Nuovo/letto, distanza e orario, senza rivelare il profilo nascosto.
-
-Le nuove attività vengono controllate ogni due secondi mentre l'app è aperta. Il suono web richiede almeno un tocco nell'app per abilitare l'audio. Restano invariati i fix dei salvataggi e della tastiera introdotti nella 0.11.2.
-
-Non sono incluse le notifiche push con app chiusa, i badge sull'icona di sistema, gli acquisti Extra o il pannello admin.
-
-## Controlli
-
-25 test backend superati. Interfacce Android/iOS controllate nel browser con API simulate: social personali/pubblici, righe chat, swipe conservato, suono refresh solo in caso di successo, assenza campanella/banner, evidenziazioni Nuovo e azzeramento selettivo, oltre ai flussi precedenti per accesso, profili, storie, media e album. Controllate larghezze di 320, 390 e 430 px. Il test SQL completo viene eseguito dall'installer sulla VPS. APK firmato e verificato; iOS non compilato in questo ambiente.
-
-Per la prova finale usa due account: invia un Tap e visita il primo profilo dal secondo. Sul primo telefono devono apparire i contatori; in Ricevuti/Visite devi distinguere le righe Nuovo e Già viste. Segna solo i Tap come letti e controlla che le visite restino nuove. Riapri l'app e verifica che la lettura sia conservata.
+## Verifica su due telefoni
+1. Richiedere un nuovo codice email e controllare grafica, codice e consegna.
+2. Guardare una storia dal profilo, chiudere e riaprire l'app; verificare cerchio spento. Pubblicare una nuova storia dall'altro account: deve comparire il cerchio colorato.
+3. Riordinare tre foto, salvare e riaprire; controllare anteprima e profilo dall'altro account. Ripetere senza foto personali.
+4. Android: provare screenshot e registrazione. iPhone: provare registrazione, duplicazione e cambio app; dopo screenshot compare l'avviso, lo scatto non è garantito bloccato.
+5. Verificare chat, invio foto, album e selezione di nuove foto dalla galleria dopo il cambio app.

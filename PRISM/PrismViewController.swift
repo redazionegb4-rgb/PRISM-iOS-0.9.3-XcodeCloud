@@ -4,7 +4,9 @@ import Security
 import CoreLocation
 import AVFoundation
 
-final class PrismViewController: UIViewController, WKScriptMessageHandlerWithReply, WKNavigationDelegate, CLLocationManagerDelegate, URLSessionTaskDelegate, AVAudioRecorderDelegate {
+final class PrismViewController: UIViewController, WKScriptMessageHandlerWithReply, WKNavigationDelegate, WKUIDelegate, CLLocationManagerDelegate, URLSessionTaskDelegate, AVAudioRecorderDelegate {
+    private let privacyShield = UIView()
+    private var inBackground = false
     private var webView: WKWebView!
     private var recorder: AVAudioRecorder?
     private var voiceURL: URL?
@@ -33,6 +35,8 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         configuration.userContentController.addUserScript(WKUserScript(source: "window.PrismMedia={start:()=>window.webkit.messageHandlers.prism.postMessage({action:'voiceStart'}),stop:()=>window.webkit.messageHandlers.prism.postMessage({action:'voiceStop'}),cancel:()=>window.webkit.messageHandlers.prism.postMessage({action:'voiceCancel'})};window.PrismIOS={call:(action,args={})=>window.webkit.messageHandlers.prism.postMessage({action,...args})};", injectionTime: .atDocumentStart, forMainFrameOnly: true))
         webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = self
+        webView.uiDelegate = self
+        webView.allowsLinkPreview = false
         webView.isOpaque = false
         webView.backgroundColor = view.backgroundColor
         webView.scrollView.backgroundColor = view.backgroundColor
@@ -45,6 +49,22 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
             webView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         locationManager.delegate = self
+        privacyShield.backgroundColor = view.backgroundColor
+        privacyShield.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(privacyShield)
+        NSLayoutConstraint.activate([privacyShield.leadingAnchor.constraint(equalTo: view.leadingAnchor),privacyShield.trailingAnchor.constraint(equalTo: view.trailingAnchor),privacyShield.topAnchor.constraint(equalTo: view.topAnchor),privacyShield.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
+        let label = UILabel()
+        label.text = "PRISM\n\nContenuti protetti\nInterrompi la registrazione o la duplicazione dello schermo per continuare."
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 20, weight: .medium)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        privacyShield.addSubview(label)
+        NSLayoutConstraint.activate([label.leadingAnchor.constraint(equalTo: privacyShield.leadingAnchor,constant: 28),label.trailingAnchor.constraint(equalTo: privacyShield.trailingAnchor,constant: -28),label.centerYAnchor.constraint(equalTo: privacyShield.centerYAnchor)])
+        privacyShield.isHidden = true
+        NotificationCenter.default.addObserver(self, selector: #selector(updateProtection), name: UIScreen.capturedDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(screenshotTaken), name: UIApplication.userDidTakeScreenshotNotification, object: nil)
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         NotificationCenter.default.addObserver(self, selector: #selector(interrupted), name: AVAudioSession.interruptionNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(pause), name: UIScene.willDeactivateNotification, object: nil)
@@ -100,6 +120,9 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         }
     }
     private func api(_ body: [String: Any], reply: @escaping (Any?, String?) -> Void) {
+        if UIScreen.main.isCaptured, let path = body["path"] as? String, path.hasPrefix("/v1/messages/"), path.hasSuffix("/open") {
+            reply(["status":403,"data":["detail":"Interrompi la registrazione dello schermo per aprire il contenuto."]],nil); return
+        }
         guard let path = body["path"] as? String, path.range(of: "^/(health|v1/[A-Za-z0-9_/?=&.\\-]+)$", options: .regularExpression) != nil,
               let method = body["method"] as? String, ["GET", "POST", "PUT", "DELETE"].contains(method),
               let url = URL(string: "https://api.prismdating.app" + path) else { reply(nil, "Richiesta non valida"); return }
@@ -150,8 +173,18 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         let reply = locationReply; locationReply = nil
         reply?(["status": 0, "data": ["detail": error]], nil)
     }
-    @objc private func pause() { if recorder != nil { finishRecording(send: false); result(error: "Registrazione annullata in background.") }; webView.evaluateJavaScript("window.prismForeground=false", completionHandler: nil) }
-    @objc private func resume() { webView.evaluateJavaScript("window.prismForeground=true;window.prismResume&&window.prismResume()", completionHandler: nil) }
+    @objc private func pause() { inBackground = true; updateProtection(); if recorder != nil { finishRecording(send: false); result(error: "Registrazione annullata in background.") }; webView.evaluateJavaScript("window.prismForeground=false", completionHandler: nil) }
+    @objc private func resume() { inBackground = false; updateProtection(); webView.evaluateJavaScript("window.prismForeground=true;window.prismResume&&window.prismResume()", completionHandler: nil) }
+    override func viewDidAppear(_ animated: Bool) { super.viewDidAppear(animated); updateProtection() }
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) { updateProtection() }
+    @objc private func updateProtection() {
+        let captured = (view.window?.windowScene?.screen ?? UIScreen.main).isCaptured
+        privacyShield.isHidden = !inBackground && !captured
+        webView.isHidden = inBackground || captured
+        webView.evaluateJavaScript("window.prismCaptureChanged&&window.prismCaptureChanged(\(captured ? "true" : "false"))",completionHandler:nil)
+    }
+    @objc private func screenshotTaken() { webView.evaluateJavaScript("window.prismScreenshotTaken&&window.prismScreenshotTaken()",completionHandler:nil) }
+    func webView(_ webView: WKWebView, contextMenuConfigurationFor elementInfo: WKContextMenuElementInfo, completionHandler: @escaping (UIContextMenuConfiguration?) -> Void) { completionHandler(nil) }
     func webView(_ webView: WKWebView, decidePolicyFor action: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         let url = action.request.url
         decisionHandler(url?.isFileURL == true && url?.path.hasPrefix(webRoot) == true ? .allow : .cancel)
