@@ -39,7 +39,7 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
             webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
-        NotificationCenter.default.addObserver(self, selector: #selector(interrupted), name: UIApplication.willResignActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(interrupted), name: UIScene.willDeactivateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(interrupted), name: AVAudioSession.interruptionNotification, object: nil)
         guard let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "Web") else {
             showError("Interfaccia non trovata nel pacchetto.")
