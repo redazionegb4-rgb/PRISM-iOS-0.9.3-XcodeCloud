@@ -1,12 +1,12 @@
-PRISM iOS 0.9.7 — AGGIORNAMENTO COMPLETO DELLA UI
+PRISM iOS 0.9.8 — AGGIORNAMENTO COMPLETO DELLA UI
 
 1. Nella radice del repository, unisci e sostituisci le cartelle PRISM e ci_scripts con quelle contenute nello ZIP. Fai commit anche di tutti i file Web/*.svg e del catalogo icone.
-2. In Config/App.xcconfig modifica solo MARKETING_VERSION = 0.9.7.
+2. In Config/App.xcconfig modifica solo MARKETING_VERSION = 0.9.8.
    Conserva il tuo DEVELOPMENT_TEAM e PRODUCT_BUNDLE_IDENTIFIER; la patch non contiene Config o project.pbxproj.
 3. Avvia un nuovo Archive in Xcode Cloud. Lo script post-clone usa CI_BUILD_NUMBER per il numero build: deve superare l’ultima build inviata.
-4. Installa la nuova build da TestFlight (versione 0.9.7).
+4. Installa la nuova build da TestFlight (versione 0.9.8).
 
-Novità 0.9.7: risposte alle storie con anteprima completa di foto o frase sullo sfondo originale, risposta ai singoli messaggi con citazione cliccabile, bozze automatiche e persistenti nella lista chat.
+Novità 0.9.8: profilo personale, modifica profilo e gestione album ridisegnati; riquadro unico per storie e risposte. Mantiene le risposte alle storie con anteprima completa di foto o frase sullo sfondo originale, risposta ai singoli messaggi con citazione cliccabile, bozze automatiche e persistenti nella lista chat.
 
 Mantiene: storie viste senza bordo colorato, rimosso il pulsante Mi piace (restano reazioni e risposte), ritorno al profilo di origine quando chiudi o termini una storia, fulmine pieno e nuovo Tap disponibile dopo 24 ore. I Tap precedenti senza orario restano subito reinviabili.
 
