@@ -2,9 +2,14 @@ import UIKit
 import WebKit
 import Security
 import CoreLocation
+import AVFoundation
 
-final class PrismViewController: UIViewController, WKScriptMessageHandlerWithReply, WKNavigationDelegate, CLLocationManagerDelegate, URLSessionTaskDelegate {
+final class PrismViewController: UIViewController, WKScriptMessageHandlerWithReply, WKNavigationDelegate, CLLocationManagerDelegate, URLSessionTaskDelegate, AVAudioRecorderDelegate {
     private var webView: WKWebView!
+    private var recorder: AVAudioRecorder?
+    private var voiceURL: URL?
+    private var voiceTimer: Timer?
+    private var recordingRequest = 0
     private let locationManager = CLLocationManager()
     private var locationReply: ((Any?, String?) -> Void)?
     private var locationGeneration = 0
@@ -22,8 +27,10 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         view.backgroundColor = UIColor(red: 0.067, green: 0.063, blue: 0.086, alpha: 1)
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .default()
+        configuration.allowsInlineMediaPlayback = true
+        configuration.mediaTypesRequiringUserActionForPlayback = []
         configuration.userContentController.addScriptMessageHandler(self, contentWorld: .page, name: "prism")
-        configuration.userContentController.addUserScript(WKUserScript(source: "window.PrismIOS={call:(action,args={})=>window.webkit.messageHandlers.prism.postMessage({action,...args})};", injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        configuration.userContentController.addUserScript(WKUserScript(source: "window.PrismMedia={start:()=>window.webkit.messageHandlers.prism.postMessage({action:'voiceStart'}),stop:()=>window.webkit.messageHandlers.prism.postMessage({action:'voiceStop'}),cancel:()=>window.webkit.messageHandlers.prism.postMessage({action:'voiceCancel'})};window.PrismIOS={call:(action,args={})=>window.webkit.messageHandlers.prism.postMessage({action,...args})};", injectionTime: .atDocumentStart, forMainFrameOnly: true))
         webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = self
         webView.isOpaque = false
@@ -39,6 +46,7 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         ])
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        NotificationCenter.default.addObserver(self, selector: #selector(interrupted), name: AVAudioSession.interruptionNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(pause), name: UIScene.willDeactivateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(resume), name: UIScene.didActivateNotification, object: nil)
         guard let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "Web") else { return }
@@ -73,6 +81,9 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
               origin.isFileURL, origin.path.hasPrefix(webRoot), let body = message.body as? [String: Any], let action = body["action"] as? String else { replyHandler(nil, "Richiesta non valida"); return }
         switch action {
         case "api": api(body, reply: replyHandler)
+        case "voiceStart": requestRecording(); replyHandler(["ok": true], nil)
+        case "voiceStop": finishRecording(send: true); replyHandler(["ok": true], nil)
+        case "voiceCancel": recordingRequest += 1; finishRecording(send: false); replyHandler(["ok": true], nil)
         case "locate":
             guard locationReply == nil else { replyHandler(["status": 0, "data": ["detail": "Posizione già in aggiornamento"]], nil); return }
             locationReply = replyHandler; locationGeneration += 1; locationStarted = false
@@ -99,13 +110,13 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         let publicAuth = path.hasPrefix("/v1/auth/") && path != "/v1/auth/logout"
         if !publicAuth, let token = savedToken() { request.setValue("Bearer " + token, forHTTPHeaderField: "Authorization") }
         if let content = body["body"] as? String, !content.isEmpty {
-            guard content.utf8.count <= 65536 else { reply(nil, "Richiesta troppo grande"); return }
+            guard content.utf8.count <= 4194304 else { reply(nil, "Richiesta troppo grande"); return }
             request.httpBody = Data(content.utf8)
         }
         session.dataTask(with: request) { [weak self] data, response, error in
             DispatchQueue.main.async {
                 guard let self = self else { reply(nil, "Operazione annullata"); return }
-                guard error == nil, let http = response as? HTTPURLResponse, let data = data, data.count <= 2097152 else { reply(["status": 0, "data": ["detail": "Connessione non disponibile. Controlla la rete e riprova."]], nil); return }
+                guard error == nil, let http = response as? HTTPURLResponse, let data = data, data.count <= 67108864 else { reply(["status": 0, "data": ["detail": "Connessione non disponibile. Controlla la rete e riprova."]], nil); return }
                 var payload = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] ?? [:]
                 if http.statusCode == 200 && path == "/v1/auth/login" {
                     guard let token = payload["access_token"] as? String else { reply(nil, "Sessione non disponibile"); return }
@@ -139,12 +150,69 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         let reply = locationReply; locationReply = nil
         reply?(["status": 0, "data": ["detail": error]], nil)
     }
-    @objc private func pause() { webView.evaluateJavaScript("window.prismForeground=false", completionHandler: nil) }
+    @objc private func pause() { if recorder != nil { finishRecording(send: false); result(error: "Registrazione annullata in background.") }; webView.evaluateJavaScript("window.prismForeground=false", completionHandler: nil) }
     @objc private func resume() { webView.evaluateJavaScript("window.prismForeground=true;window.prismResume&&window.prismResume()", completionHandler: nil) }
     func webView(_ webView: WKWebView, decidePolicyFor action: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         let url = action.request.url
         decisionHandler(url?.isFileURL == true && url?.path.hasPrefix(webRoot) == true ? .allow : .cancel)
     }
-    deinit { NotificationCenter.default.removeObserver(self); session.invalidateAndCancel() }
+    private func literal(_ value: String) -> String {
+        let data = try! JSONSerialization.data(withJSONObject: [value])
+        let text = String(data: data, encoding: .utf8)!
+        return String(text.dropFirst().dropLast())
+    }
+    private func status(_ value: String) { webView.evaluateJavaScript("nativeVoiceStatus(\(literal(value)))", completionHandler: nil) }
+    private func result(_ data: String = "", error: String = "") { webView.evaluateJavaScript("nativeVoiceResult(\(literal(data)),\(literal(error)))", completionHandler: nil) }
+    private func requestRecording() {
+        guard recorder == nil else { return }
+        recordingRequest += 1
+        let request = recordingRequest
+        status("pending")
+        AVAudioSession.sharedInstance().requestRecordPermission { [weak self] allowed in
+            DispatchQueue.main.async {
+                guard let self = self, self.recordingRequest == request else { return }
+                guard allowed else { self.status("idle"); self.result(error: "Microfono non autorizzato. Abilitalo nelle impostazioni iPhone."); return }
+                self.beginRecording()
+            }
+        }
+    }
+    private func beginRecording() {
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker])
+            try session.setActive(true)
+            let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString).appendingPathExtension("m4a")
+            voiceURL = url
+            let recorder = try AVAudioRecorder(url: url, settings: [AVFormatIDKey: kAudioFormatMPEG4AAC, AVSampleRateKey: 22050.0, AVNumberOfChannelsKey: 1, AVEncoderBitRateKey: 32000])
+            recorder.delegate = self
+            recorder.prepareToRecord()
+            guard recorder.record() else { throw RecorderError.failed }
+            self.recorder = recorder
+            status("recording")
+            voiceTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: false) { [weak self] _ in self?.finishRecording(send: true) }
+        } catch { finishRecording(send: false); result(error: "Impossibile avviare la registrazione.") }
+    }
+    private func finishRecording(send: Bool) {
+        voiceTimer?.invalidate(); voiceTimer = nil
+        let duration = recorder?.currentTime ?? 0
+        recorder?.stop(); recorder = nil
+        status("idle")
+        let url = voiceURL; voiceURL = nil
+        defer {
+            if let url = url { try? FileManager.default.removeItem(at: url) }
+            try? AVAudioSession.sharedInstance().setCategory(.playback)
+            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        }
+        if send {
+            guard duration > 0.2, let url = url, let data = try? Data(contentsOf: url) else { result(error: "Registrazione troppo breve: riprova."); return }
+            result("data:audio/mp4;base64," + data.base64EncodedString())
+        }
+    }
+    @objc private func interrupted() {
+        if recorder != nil { finishRecording(send: false); result(error: "Registrazione annullata durante l’interruzione.") }
+    }
+    func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder, error: Error?) { finishRecording(send: false); result(error: "Errore nella registrazione.") }
+    private enum RecorderError: Error { case failed }
+    deinit { voiceTimer?.invalidate(); recorder?.stop(); if let url = voiceURL { try? FileManager.default.removeItem(at: url) }; NotificationCenter.default.removeObserver(self); session.invalidateAndCancel() }
     private enum SessionError: Error { case storage }
 }

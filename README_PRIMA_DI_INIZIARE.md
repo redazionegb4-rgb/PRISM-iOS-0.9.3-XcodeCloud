@@ -1,36 +1,46 @@
-# PRISM 0.11.0 — prima anteprima online
+# PRISM 0.11.1 — interfaccia originale e verifica email con codice
 
-Questa versione usa https://api.prismdating.app e richiede il backend PRISM 0.2.0 già installato. Non richiede un nuovo aggiornamento del VPS.
+Ripristina l'interfaccia completa della 0.10.4: login/registrazione, griglia con storie, Tap ricevuti/inviati e visite, profilo personale, modifica, profili pubblici, privacy e blocchi, album, conversazioni e piano Extra. La 0.11.0 semplificata viene sostituita.
 
-## Cosa è collegato al server
-Registrazione con email, password di almeno 12 caratteri, data di nascita e conferma maggiore età; verifica email e recupero password tramite link; accesso e uscita; modifica del profilo e social; posizione autorizzata dal telefono e ricerca entro 1–5 km; filtri Tutti/Online/Preferiti; preferiti; tap ricevuti e inviati con data e intervallo di 24 ore; chat di testo con emoji, ordinamento recente e cancellazione dalla propria lista tramite swipe; blocco/sblocco e segnalazione; privacy di stato online, ultimo accesso e distanza; eliminazione account con credenziali.
+## 1. Aggiorna prima il backend sulla VPS
 
-La sessione viene conservata nel Keychain su iOS e cifrata con Android Keystore su Android; il token non viene passato al JavaScript. I dati personali visualizzati restano in memoria nel client. Il server salva i dati reali. Nessun profilo o messaggio dimostrativo viene creato.
+Scarica PRISM-backend-0.3.0.zip. Con WinSCP caricalo nella cartella /home/ubuntu della VPS PRISM, poi in PuTTY esegui:
 
-## Primo test su due telefoni
-1. Installa l'APK aggiornato o la nuova build TestFlight.
-2. Registra due account nuovi con email differenti. Gli account locali della demo non sono account del server e non vengono trasferiti.
-3. Apri il link di conferma ricevuto via email, quindi accedi nell'app.
-4. Consenti la posizione su entrambi i telefoni e premi Attiva posizione. I telefoni devono essere entro il raggio selezionato, massimo 5 km, e aver aggiornato la posizione.
-5. Controlla profili, preferiti, tap, chat, modifica profilo e blocco. Se non ci sono utenti reali in zona, la griglia vuota è corretta.
-6. Prova il recupero password e, con un account di prova, la cancellazione account.
+```bash
+cd /home/ubuntu
+python3 -m zipfile -e PRISM-backend-0.3.0.zip prism-update-030
+cd /home/ubuntu/prism-update-030/PRISM-backend-restore
+sudo bash install.sh
+```
 
-## Limiti di questa fase
-Questa è una build pilota per verificare il collegamento reale, non la versione finale per il pubblico. Foto profilo, foto in chat, album, storie e audio non sono ancora collegati al backend e non sono disponibili in questa build. Non vengono inviati finti contenuti e i dati della precedente demo non vengono caricati sul server.
+L'installer usa la configurazione del database e dell'email già presenti, salva un backup prima della migrazione, aggiunge le tabelle e i campi necessari, aggiorna il servizio e Nginx e infine esegue un test in uno schema temporaneo. Il test non invia email all'esterno e non modifica gli account reali. L'ultima riga deve essere: «Aggiornamento PRISM 0.3.0 completato e test isolato superato».
 
-Gli aggiornamenti delle chat e delle liste arrivano ogni 7 secondi mentre l'app è aperta. Non sono ancora notifiche push: ad app chiusa non arriva una notifica. Anche pannello amministrativo, gestione operativa delle segnalazioni, visualizzazioni del profilo e acquisti PRISM EXTRA restano da implementare. Le segnalazioni vengono salvate nel database, ma non c'è ancora un pannello per lavorarle.
+Il test completo SQL deve essere eseguito dalla VPS: in questo ambiente sono stati eseguiti 22 test del backend su validazione, sicurezza del codice, email e protezione dei contenuti, e i test delle interfacce Android/iOS con API simulate. Nessun aggiornamento è già stato eseguito sul tuo server da questa consegna.
 
-## Verifiche effettuate
-Compilazione Java e DEX, confezionamento e firma dell'APK; confronto della firma con la versione precedente; controlli JavaScript; test automatici delle due interfacce su registrazione/verifica/accesso, posizione, preferiti, tap, retry dei messaggi senza duplicati, ricezione messaggi senza perdere la bozza, blocco, privacy, modifica e swipe di cancellazione; controllo visivo delle schermate su formato telefono.
+## 2. Android
 
-I test del client usano un server simulato solo nell'ambiente di verifica, escluso dai pacchetti distribuiti. Non sostituiscono il test reale fra dispositivi sul VPS. Il progetto iOS è preparato per Xcode Cloud; la compilazione iOS e il test su dispositivo devono essere completati su Xcode Cloud/TestFlight.
+Installa PRISM-0.11.1.apk sopra la precedente app. Stesso package app.prism.dating, stessa firma di sviluppo, versionCode 25.
 
-## Pubblicare la build iOS con Xcode Cloud
-1. Estrai il pacchetto completo e aggiorna nel repository le cartelle PRISM, PRISM.xcodeproj, Config e ci_scripts, mantenendo la stessa struttura. Non caricare lo ZIP come file unico nel repository.
-2. Mantieni il Bundle ID app.prism.dating e il tuo Team ID Apple. In Config/App.xcconfig il Team è lasciato vuoto: puoi conservarlo dal repository esistente o impostare PRISM_TEAM_ID nel workflow Xcode Cloud.
-3. La versione è 0.11.0, build locale 14. Il post-clone usa CI_BUILD_NUMBER se presente: il numero finale deve essere superiore a quello già caricato su App Store Connect.
-4. Esegui il workflow Archive e distribuzione a TestFlight che usavi già. Non serve compilare o trasferire dal vecchio Mac.
-5. La gestione UIScene del fix di avvio è mantenuta. Il post-clone non scarica dipendenze esterne.
-6. Dopo la compilazione, prova registrazione, apertura email, accesso e permesso posizione su iPhone.
+## 3. iOS con Xcode Cloud
 
-Il manifest privacy è aggiornato per i dati dell'anteprima online. Prima della distribuzione pubblica aggiorna anche le risposte App Privacy in App Store Connect e la policy del servizio. Riferimenti tecnici: https://developer.apple.com/documentation/technotes/tn3184-adding-data-collection-details-to-your-privacy-manifest e https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacycollecteddatatypes/nsprivacycollecteddatatype
+Estrai PRISM-iOS-0.11.1-XcodeCloud.zip. Aggiorna nel repository le cartelle PRISM, PRISM.xcodeproj, Config e ci_scripts mantenendo la struttura. Mantieni il Team ID Apple già usato, o imposta PRISM_TEAM_ID nel workflow. Bundle ID app.prism.dating, versione 0.11.1, build locale 15; CI_BUILD_NUMBER prevale se presente e deve essere superiore al numero già caricato.
+
+Esegui il workflow Archive/TestFlight che usavi già: non serve compilare o trasferire direttamente dal vecchio Mac. Il lifecycle UIScene del precedente fix di avvio è mantenuto. La compilazione iOS richiede Xcode Cloud e la verifica finale su iPhone/TestFlight.
+
+## Verifica email
+
+La registrazione invia un codice di sei cifre. Inseriscilo nella schermata di verifica dell'app. Non serve aprire un link. Il codice scade dopo 10 minuti, ha un massimo di cinque tentativi e viene invalidato dopo l'uso. Puoi richiedere un nuovo codice ogni 60 secondi. Non ci sono codici fissi o dimostrativi.
+
+Per un account registrato prima dell'aggiornamento e ancora da verificare, inserisci l'email e premi «Invia un nuovo codice». Il recupero password mantiene il link per scegliere una password nuova.
+
+## Collegamenti reali aggiunti
+
+Foto profilo fino a sei, dettagli personali e social; album personali e invio in chat; foto normali e visualizzabili una volta; vocali; storie fotografiche o testuali, risposte/reazioni con anteprima originale; visite reali; preferiti, tap e blocchi. Le storie degli altri seguono il raggio scelto entro 5 km. La tua anteprima dei contenuti visualizzabili una volta non consuma l'apertura del destinatario.
+
+Il piano Free permette un album, due foto visualizzabili una volta al giorno (mezzanotte italiana), ricerca fino a 5 km e identità dei cinque visitatori più recenti. Gli altri visitatori hanno copertina sfocata sul server, distanza e orario; l'identità non viene inviata al client. I profili bloccati sono esclusi da griglia, chat, tap, visite e storie.
+
+La pagina Extra conserva il confronto e il prezzo proposto di 5,99 €/mese. Gli acquisti non sono ancora attivi e non c'è un pulsante che simula un abbonamento. Push e pannello admin restano il prossimo passaggio. Gli aggiornamenti in primo piano avvengono ogni 7 secondi.
+
+I contenuti della precedente demo non vengono caricati sul server. Gli account reali eventualmente già creati restano validi; gli account locali della demo richiedono registrazione sul servizio. Nessun profilo fittizio viene inserito. Per il primo test crea due account verificati su telefoni vicini e autorizza la posizione.
+
+Questa rimane una build pilota: prova i flussi su dispositivi reali prima della distribuzione pubblica. I media sono compressi e limitati e vengono conservati nel database del servizio; storage dedicato, moderazione operativa, push, pannello admin e pagamenti devono essere completati prima del lancio.
