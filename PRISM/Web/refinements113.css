@@ -1,0 +1,59 @@
+/* PRISM 0.11.3: one shared layout for Android and iPhone. */
+.socialrows113{display:flex;flex-direction:column;gap:0;width:100%;min-width:0;margin:2px 0 0}
+.socialrow113{display:flex;align-items:center;gap:12px;min-width:0;padding:13px 0;background:none;border:0;border-radius:0}
+.socialrow113+.socialrow113{border-top:1px solid #423047;padding-top:15px;margin-top:2px}
+.socialicon113{display:grid;place-items:center;flex:0 0 37px;width:37px;height:37px;border-radius:12px;background:#e9bc8012;color:#e9bc80}
+.socialicon113 svg.icon{width:21px;height:21px;flex:none}
+.socialcopy113{display:block;flex:1;min-width:0;text-align:left}
+.socialcopy113 small{display:block;font-size:10px;line-height:1.5;color:#a995b4;letter-spacing:.25px;margin-bottom:2px}
+.socialcopy113 b{display:block;font-size:14px;line-height:1.5;font-weight:600;white-space:normal;overflow-wrap:anywhere;color:#f4edf7}
+.nearheading100 h1{padding-right:0}
+.sociallinks11,.public99 .sociallinks11{margin:0!important;display:block!important}
+.swiperow95{border:1px solid #3c2d46!important;border-radius:19px!important;margin:0 0 11px;overflow:hidden;isolation:isolate;background:#241b2c;touch-action:pan-y}
+.swiperow95 .chatrow5{display:flex;align-items:center;gap:12px;background:#241b2c!important;border:0!important;border-radius:0!important;padding:15px 14px!important;min-height:89px;min-width:0;width:100%;box-shadow:none;transition:transform .2s ease}
+.swiperow95 .chatrow5 img{width:53px!important;height:53px!important;border-radius:17px!important;object-fit:cover;flex:0 0 53px;border:1px solid #493550}
+.swiperow95 .chatrow5 .copy{display:block;min-width:0;flex:1;text-align:left}
+.chatname113{display:block;font-size:15px;font-weight:650;line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chatpreview113{display:block;font-size:12px;line-height:1.5;margin-top:4px;color:#ab98b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chatmeta113{display:flex;flex:0 0 68px;align-items:flex-end;justify-content:center;flex-direction:column;gap:9px;align-self:stretch;min-width:0}
+.chatmeta113 time{display:block;width:100%;white-space:nowrap;text-align:right;font-size:10px;color:#a48eae;overflow:hidden;text-overflow:ellipsis}
+.chatmeta113 .chatunreadOnline{min-width:20px;height:20px;font-size:10px;border:0;line-height:1;padding:0 5px}
+.swiperow95.hasunread113{border-color:#9b754e!important;background:#2e2132}
+.swiperow95.hasunread113 .chatrow5{background:#2e2132!important}
+.swiperow95.hasunread113 .chatpreview113{color:#e0cde8}
+.swiperow95.open95 .chatrow5{transform:translateX(-84px)}
+.swipedelete95{inset:0 0 0 auto!important;width:84px;height:100%;border-radius:0;background:#843d51}
+.swipehint95{margin:0 0 16px;font-size:10px;color:#917d9d;display:flex;gap:5px;align-items:center}
+.swipehint95 svg{width:14px;height:14px}
+.activitytabs102{gap:5px;padding:5px;margin-top:23px;margin-bottom:21px}
+.activitytabs102 button{position:relative;display:block;padding:12px 5px 10px;min-height:61px;border-radius:11px}
+.activitytabs102 button>span{display:block;font-size:12px;font-weight:650;line-height:1.5}
+.activitytabs102 button>small{display:block;font-size:9px;line-height:1.6;opacity:.72;margin-top:2px}
+.activitycount113{position:absolute;top:-9px;right:5px;display:grid;place-items:center;min-width:21px;height:21px;padding:0 5px;border-radius:12px;background:#edbe80;color:#25180e;border:2px solid #241b2d;font-size:10px;font-style:normal}
+.activitysummary113{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;background:#edbe800d;border:1px solid #795637;border-radius:16px;margin-bottom:18px}
+.activitysummary113>span{display:block;flex:1;min-width:0}
+.activitysummary113 b{display:block;font-size:12px;line-height:1.5;color:#edbe80}
+.activitysummary113 small{display:block;font-size:10px;line-height:1.6;color:#b79ebf;margin-top:3px}
+.activitysummary113 button{flex-shrink:0;max-width:105px;padding:9px 12px;font-size:10px;font-weight:600;line-height:1.4;color:#edbe80;background:#62422a4d;border:1px solid #7f5839;border-radius:10px}
+.activitysummary113 button:disabled{opacity:.55}
+.activitygroup113{display:flex;align-items:center;gap:8px;font-size:11px;line-height:1.5;font-weight:600;color:#ae98ba;text-transform:uppercase;letter-spacing:.75px;margin:23px 0 11px}
+.activitygroup113 span{font-size:10px;color:#846e91;letter-spacing:0}
+.activityrow102{gap:12px;padding:14px;min-width:0}
+.activityrow102.isnew113{border-color:#9e7347;background:linear-gradient(120deg,#352535,#261d2e);box-shadow:inset 3px 0 0 #edbe80}
+.activityrow102 .copy{display:block;min-width:0;flex:1}
+.activityname113{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:5px}
+.activityname113>b{display:block;min-width:0;max-width:100%;margin:0!important;font-size:13px;overflow-wrap:anywhere}
+.newlabel113,.sentlabel113{display:inline-block;font-size:8px;line-height:1.5;font-style:normal;font-weight:700;white-space:nowrap;letter-spacing:.25px;padding:3px 6px;border-radius:6px}
+.newlabel113{background:#edbe80;color:#25180e}
+.sentlabel113{background:#ffffff0b;border:1px solid #715234;color:#d3ae7a}
+.activitydistance113{display:block;font-size:10px;color:#b49bc4;margin:0 0 5px}
+.activityglyph113{flex:0 0 23px;color:#a88cba}
+.activityglyph113 svg{width:19px;height:19px}
+.activityrow102.isnew113 .activityglyph113{color:#edbe80}
+.tapagain113{display:block;font-size:9px;color:#957da4;margin-top:5px;line-height:1.5}
+.privacy100 .sounds113 .privacyrow100{margin:0;padding:13px 0 0}
+.sounds113 .privacyrow100>span{flex:1;min-width:0}
+.sounds113 .privacyrow100 b,.sounds113 .privacyrow100 small{display:block}
+.sounds113 .privacyrow100 small{font-size:10px;line-height:1.6;color:#ad96ba;margin-top:5px}
+.sounds113 .privacyrow100 input{flex:0 0 22px;width:22px;height:22px;margin-left:10px}
+@media(prefers-reduced-motion:reduce){.swiperow95 .chatrow5{transition:none}}
