@@ -1,46 +1,42 @@
-# PRISM 0.11.1 — interfaccia originale e verifica email con codice
+# PRISM 0.11.2 — aggiornamenti immediati, chat iPhone e notifiche interne
 
-Ripristina l'interfaccia completa della 0.10.4: login/registrazione, griglia con storie, Tap ricevuti/inviati e visite, profilo personale, modifica, profili pubblici, privacy e blocchi, album, conversazioni e piano Extra. La 0.11.0 semplificata viene sostituita.
+Mantiene la grafica completa della 0.10.4 ripristinata nella 0.11.1 e la verifica email con codice di sei cifre.
 
-## 1. Aggiorna prima il backend sulla VPS
+## Aggiorna prima il server
 
-Scarica PRISM-backend-0.3.0.zip. Con WinSCP caricalo nella cartella /home/ubuntu della VPS PRISM, poi in PuTTY esegui:
+Con WinSCP carica PRISM-backend-0.3.1.zip in /home/ubuntu della VPS. Poi esegui in PuTTY:
 
 ```bash
 cd /home/ubuntu
-python3 -m zipfile -e PRISM-backend-0.3.0.zip prism-update-030
-cd /home/ubuntu/prism-update-030/PRISM-backend-restore
+python3 -m zipfile -e PRISM-backend-0.3.1.zip prism-update-031
+cd /home/ubuntu/prism-update-031/PRISM-backend-restore
 sudo bash install.sh
 ```
 
-L'installer usa la configurazione del database e dell'email già presenti, salva un backup prima della migrazione, aggiunge le tabelle e i campi necessari, aggiorna il servizio e Nginx e infine esegue un test in uno schema temporaneo. Il test non invia email all'esterno e non modifica gli account reali. L'ultima riga deve essere: «Aggiornamento PRISM 0.3.0 completato e test isolato superato».
+L'installer mantiene database e configurazioni email esistenti, salva un backup e aggiunge le tabelle dei contatori letti. Include un test SQL isolato su codici email, media, notifiche, lettura selettiva, nuovi eventi dopo la lettura e blocchi. L'ultima riga deve essere «Aggiornamento PRISM 0.3.1 completato e test isolato superato». Il server non è stato aggiornato da remoto.
 
-Il test completo SQL deve essere eseguito dalla VPS: in questo ambiente sono stati eseguiti 22 test del backend su validazione, sicurezza del codice, email e protezione dei contenuti, e i test delle interfacce Android/iOS con API simulate. Nessun aggiornamento è già stato eseguito sul tuo server da questa consegna.
+## Android
 
-## 2. Android
+Installa PRISM-0.11.2.apk sopra la versione precedente: stesso package e stessa firma di sviluppo, versionCode 26. I sorgenti completi sono nel pacchetto Android-source.
 
-Installa PRISM-0.11.1.apk sopra la precedente app. Stesso package app.prism.dating, stessa firma di sviluppo, versionCode 25.
+## iPhone / Xcode Cloud
 
-## 3. iOS con Xcode Cloud
+Estrai il pacchetto iOS e aggiorna nel repository le cartelle PRISM, Config, ci_scripts e PRISM.xcodeproj. Versione 0.11.2, build locale 16; CI_BUILD_NUMBER del workflow prevale e deve superare l'ultima build caricata. Mantieni il workflow Archive/TestFlight già usato: non occorre trasferire direttamente dal vecchio Mac. Team B8SC92LPR5, bundle app.prism.dating. La compilazione e la prova con tastiera reale richiedono Xcode Cloud/TestFlight.
 
-Estrai PRISM-iOS-0.11.1-XcodeCloud.zip. Aggiorna nel repository le cartelle PRISM, PRISM.xcodeproj, Config e ci_scripts mantenendo la struttura. Mantieni il Team ID Apple già usato, o imposta PRISM_TEAM_ID nel workflow. Bundle ID app.prism.dating, versione 0.11.1, build locale 15; CI_BUILD_NUMBER prevale se presente e deve essere superiore al numero già caricato.
+## Modifiche
 
-Esegui il workflow Archive/TestFlight che usavi già: non serve compilare o trasferire direttamente dal vecchio Mac. Il lifecycle UIScene del precedente fix di avvio è mantenuto. La compilazione iOS richiede Xcode Cloud e la verifica finale su iPhone/TestFlight.
+- Preferiti: la stellina e i conteggi cambiano subito; il salvataggio è sul server. In caso di errore lo stato viene ripristinato e compare un messaggio. Le richieste già in corso non sovrascrivono un'azione nuova. Il caricamento iniziale ripristina tutti i preferiti anche oltre il raggio vicino.
+- Album: dopo la conferma del server la raccolta, la disponibilità Free e il conteggio nel proprio profilo si aggiornano senza riaprire la pagina. I pulsanti di salvataggio vengono disabilitati durante l'invio e le vecchie risposte non sovrascrivono il nuovo album.
+- Chat iPhone: campi ad almeno 16 px per impedire lo zoom automatico durante la scrittura; chat dimensionata all'area effettivamente visibile sopra la tastiera. L'invio di testo mantiene lo stesso campo invece di ricreare tutta la schermata.
+- Avvisi interni: banner per nuovi messaggi, Tap e visite, centro Notifiche con orari, contatori numerici sulle icone Tap/Chat e sulle conversazioni non lette. Il pulsante Notifiche è disponibile su Vicino a te, Chat e Il mio profilo. L'icona Tap somma Tap ricevuti e visite non letti.
+- La lettura dei Tap ricevuti azzera solo il contatore Tap; la pagina Visite azzera solo le visite; una conversazione aperta azzera solo i messaggi effettivamente caricati di quella chat. I punti di lettura sono salvati sul server, anche dopo chiusura o accesso da un altro dispositivo. L'eliminazione di chat e i blocchi escludono la relativa attività dai conteggi.
+- Suono breve per nuova attività con app aperta, dopo il primo tocco necessario ad abilitare l'audio. Disattivabile dal centro Notifiche. All'accesso le attività precedenti vengono contate senza riprodurre tutti i suoni arretrati.
+- Le modifiche effettuate sul telefono aggiornano subito le schermate; le attività degli altri vengono controllate ogni due secondi mentre l'app è in primo piano. Bozze, pagina profilo aperta e campo messaggio vengono conservati.
 
-## Verifica email
+Questi sono avvisi dentro l'app. Le notifiche push con app chiusa, il badge sull'icona di sistema iOS/Android, gli acquisti Extra e il pannello admin non sono inclusi in questo aggiornamento.
 
-La registrazione invia un codice di sei cifre. Inseriscilo nella schermata di verifica dell'app. Non serve aprire un link. Il codice scade dopo 10 minuti, ha un massimo di cinque tentativi e viene invalidato dopo l'uso. Puoi richiedere un nuovo codice ogni 60 secondi. Non ci sono codici fissi o dimostrativi.
+## Verifiche e prova
 
-Per un account registrato prima dell'aggiornamento e ancora da verificare, inserisci l'email e premi «Invia un nuovo codice». Il recupero password mantiene il link per scegliere una password nuova.
+25 test backend superati. Controllate entrambe le interfacce con API simulate: preferiti immediati e ripristino dopo errore, conteggio album, dimensioni del campo messaggio, banner, contatori e azzeramento selettivo; confermati i flussi precedenti per email, profili, storie, messaggi e album. APK firmato e verificato. Il test completo SQL viene eseguito dall'installer sulla VPS; la build nativa iOS non è stata compilata in questo ambiente.
 
-## Collegamenti reali aggiunti
-
-Foto profilo fino a sei, dettagli personali e social; album personali e invio in chat; foto normali e visualizzabili una volta; vocali; storie fotografiche o testuali, risposte/reazioni con anteprima originale; visite reali; preferiti, tap e blocchi. Le storie degli altri seguono il raggio scelto entro 5 km. La tua anteprima dei contenuti visualizzabili una volta non consuma l'apertura del destinatario.
-
-Il piano Free permette un album, due foto visualizzabili una volta al giorno (mezzanotte italiana), ricerca fino a 5 km e identità dei cinque visitatori più recenti. Gli altri visitatori hanno copertina sfocata sul server, distanza e orario; l'identità non viene inviata al client. I profili bloccati sono esclusi da griglia, chat, tap, visite e storie.
-
-La pagina Extra conserva il confronto e il prezzo proposto di 5,99 €/mese. Gli acquisti non sono ancora attivi e non c'è un pulsante che simula un abbonamento. Push e pannello admin restano il prossimo passaggio. Gli aggiornamenti in primo piano avvengono ogni 7 secondi.
-
-I contenuti della precedente demo non vengono caricati sul server. Gli account reali eventualmente già creati restano validi; gli account locali della demo richiedono registrazione sul servizio. Nessun profilo fittizio viene inserito. Per il primo test crea due account verificati su telefoni vicini e autorizza la posizione.
-
-Questa rimane una build pilota: prova i flussi su dispositivi reali prima della distribuzione pubblica. I media sono compressi e limitati e vengono conservati nel database del servizio; storage dedicato, moderazione operativa, push, pannello admin e pagamenti devono essere completati prima del lancio.
+Dopo l'aggiornamento del server, prova con due account verificati: dal secondo invia un Tap, visita il primo profilo e scrivi un messaggio. Sul primo telefono, lasciato su Vicino a te, devono apparire banner, suono e contatori. Apri Ricevuti, Visite e poi la chat: ogni contatore deve azzerarsi separatamente. Su iPhone prova anche l'apertura e la chiusura della tastiera, mantenendo visibili campo e pulsante Invio.
