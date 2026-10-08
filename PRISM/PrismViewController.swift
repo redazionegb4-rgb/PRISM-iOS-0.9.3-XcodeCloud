@@ -97,7 +97,7 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         item[kSecAttrAccessible as String] = kSecAttrAccessibleWhenUnlockedThisDeviceOnly
         guard SecItemAdd(item as CFDictionary, nil) == errSecSuccess else { throw SessionError.storage }
     }
-    private func clearToken() { SecItemDelete(tokenQuery() as CFDictionary); UserDefaults.standard.removeObject(forKey:"prismPushPending"); UNUserNotificationCenter.current().removeAllDeliveredNotifications() }
+    private func clearToken() { SecItemDelete(tokenQuery() as CFDictionary); UserDefaults.standard.removeObject(forKey:"prismPushPending"); UNUserNotificationCenter.current().removeAllDeliveredNotifications(); UNUserNotificationCenter.current().setBadgeCount(0) }
     func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage, replyHandler: @escaping (Any?, String?) -> Void) {
         guard message.frameInfo.isMainFrame, let origin = message.frameInfo.request.url,
               origin.isFileURL, origin.path.hasPrefix(webRoot), let body = message.body as? [String: Any], let action = body["action"] as? String else { replyHandler(nil, "Richiesta non valida"); return }
@@ -149,6 +149,11 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
                 guard let self = self else { reply(nil, "Operazione annullata"); return }
                 guard error == nil, let http = response as? HTTPURLResponse, let data = data, data.count <= 67108864 else { reply(["status": 0, "data": ["detail": "Connessione non disponibile. Controlla la rete e riprova."]], nil); return }
                 var payload = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] ?? [:]
+                if http.statusCode == 200 && path == "/v1/notifications", let counts = payload["counts"] as? [String:Any] {
+                    let total = ["message","tap","visit"].reduce(0) { $0 + max(0,(counts[$1] as? NSNumber)?.intValue ?? 0) }
+                    UNUserNotificationCenter.current().setBadgeCount(total)
+                    if total == 0 { UNUserNotificationCenter.current().removeAllDeliveredNotifications() }
+                }
                 if http.statusCode == 200 && path == "/v1/auth/login" {
                     guard let token = payload["access_token"] as? String else { reply(nil, "Sessione non disponibile"); return }
                     do { try self.storeToken(token) } catch { reply(nil, "Impossibile salvare la sessione sul telefono"); return }

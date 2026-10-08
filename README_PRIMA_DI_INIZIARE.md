@@ -1,15 +1,15 @@
-# PRISM 0.11.5 — notifiche push
+# PRISM 0.11.6 — notifiche push
 
-Android: versione 0.11.5, codice 29. iOS: versione 0.11.5, build iniziale 19 (Xcode Cloud può usare il proprio numero progressivo). Backend: 0.3.4.
+Android: versione 0.11.6, codice 30. iOS: versione 0.11.6, build iniziale 22 (Xcode Cloud può usare il proprio numero progressivo). Backend: 0.3.5.
 
 ## 1. Aggiornare prima il backend
 
-Caricare `PRISM-backend-0.3.4.zip` in `/home/ubuntu` con WinSCP. In PuTTY:
+Caricare `PRISM-backend-0.3.5.zip` in `/home/ubuntu` con WinSCP. In PuTTY:
 
 ```bash
 cd /home/ubuntu
-python3 -m zipfile -e PRISM-backend-0.3.4.zip prism-update-034
-cd /home/ubuntu/prism-update-034/PRISM-backend-restore
+python3 -m zipfile -e PRISM-backend-0.3.5.zip prism-update-035
+cd /home/ubuntu/prism-update-035/PRISM-backend-restore
 sudo bash install.sh
 ```
 
@@ -21,17 +21,17 @@ Controllo versione:
 curl --fail --silent https://api.prismdating.app/health
 ```
 
-Deve riportare `0.3.4`. La chiave privata Firebase già configurata rimane esclusivamente sulla VPS: non è inclusa nei pacchetti.
+Deve riportare `0.3.5`. La chiave privata Firebase già configurata rimane esclusivamente sulla VPS: non è inclusa nei pacchetti.
 
 ## 2. Android
 
-Installare `PRISM-0.11.5.apk` sopra la versione precedente: mantiene la stessa firma di sviluppo. Alla richiesta, consentire le notifiche. Il progetto sorgente ora include Gradle, Firebase Messaging e `google-services.json` per `prism-78dd7`.
+Installare `PRISM-0.11.6.apk` sopra la versione precedente: mantiene la stessa firma di sviluppo. Alla richiesta, consentire le notifiche. Il progetto sorgente ora include Gradle, Firebase Messaging e `google-services.json` per `prism-78dd7`.
 
 Per ricompilare servono JDK 17 e Android SDK 35. Da Windows, nella cartella `prism`: `gradlew.bat :app:assembleRelease`. Su Linux/macOS: `bash build.sh`. L'APK usa la firma di sviluppo per i test; per Play Store serve la propria firma di produzione.
 
 ## 3. iOS / Xcode Cloud / TestFlight
 
-Estrarre `PRISM-iOS-0.11.5-XcodeCloud.zip` e aggiornare il repository già collegato a Xcode Cloud. Includere **tutta** la cartella del progetto: `.xcodeproj`, `Config`, `ci_scripts`, `PRISM/Web`, file Swift, `GoogleService-Info.plist` e `PRISM.entitlements`.
+Estrarre `PRISM-iOS-0.11.6-XcodeCloud.zip` e aggiornare il repository già collegato a Xcode Cloud. Includere **tutta** la cartella del progetto: `.xcodeproj`, `Config`, `ci_scripts`, `PRISM/Web`, file Swift, `GoogleService-Info.plist` e `PRISM.entitlements`.
 
 Avviare il workflow Archive e distribuzione TestFlight già usato. Xcode Cloud risolverà Firebase tramite Swift Package Manager. Team e bundle sono già configurati: `B8SC92LPR5`, `app.prism.dating`. La capability Push Notifications deve restare abilitata sul tuo identificatore Apple, come appena fatto. La chiave APNs caricata su Firebase non va inserita nel repository.
 
@@ -76,4 +76,12 @@ Non condividere il contenuto della chiave privata o i token dei telefoni.
 
 ## Verifiche eseguite
 
-33 test backend superati; controlli browser sulle interfacce Android/iOS, preferenze con ripristino in caso di errore, apertura notifiche e regressioni delle funzioni precedenti. APK compilato con Firebase e verificato nella firma. File condivisi delle due app identici e archivi controllati. La consegna reale FCM/APNs resta da verificare sui tuoi dispositivi dopo l'aggiornamento.
+34 test backend superati; controlli browser sulle interfacce Android/iOS, preferenze con ripristino in caso di errore, apertura notifiche e regressioni delle funzioni precedenti. APK compilato con Firebase e verificato nella firma. File condivisi delle due app identici e archivi controllati. La consegna reale FCM/APNs resta da verificare sui tuoi dispositivi dopo l'aggiornamento.
+
+## Contatore sull’icona del telefono
+- iPhone: ogni push include il totale non letto di messaggi, Tap e visite calcolato dal server. Aprendo l’app il numero viene riallineato ai dati del server; leggere gli elementi lo riduce, il logout lo azzera. Verificare che Impostazioni > Notifiche > PRISM > Badge sia abilitato.
+- Android: notifiche e canale comunicano il numero non letto al launcher. PRISM usa una notifica aggregata per evitare somme duplicate; la notifica viene rimossa quando non resta nulla da leggere. Il telefono può mostrare un numero oppure un puntino, secondo il launcher e le impostazioni.
+- I contatori interni su Chat e Tap restano presenti. Quando si legge da un altro dispositivo, il badge viene riallineato alla successiva apertura/sincronizzazione oppure alla successiva push.
+- Il progetto iOS include Package.resolved e il post-clone lo valida, mantenendo la correzione delle dipendenze Xcode Cloud.
+
+Prova: inviare due messaggi e un Tap con destinatario in background; verificare il numero, aprire la chat e leggere, poi leggere il Tap e verificare il decremento. Ripetere logout e cambio account. Compilazione iOS da confermare su Xcode Cloud.
