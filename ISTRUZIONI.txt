@@ -1,12 +1,14 @@
-PRISM iOS 0.9.5 — AGGIORNAMENTO COMPLETO DELLA UI
+PRISM iOS 0.9.6 — AGGIORNAMENTO COMPLETO DELLA UI
 
 1. Nella radice del repository, unisci e sostituisci le cartelle PRISM e ci_scripts con quelle contenute nello ZIP. Fai commit anche di tutti i file Web/*.svg e del catalogo icone.
-2. In Config/App.xcconfig modifica solo MARKETING_VERSION = 0.9.5.
+2. In Config/App.xcconfig modifica solo MARKETING_VERSION = 0.9.6.
    Conserva il tuo DEVELOPMENT_TEAM e PRODUCT_BUNDLE_IDENTIFIER; la patch non contiene Config o project.pbxproj.
 3. Avvia un nuovo Archive in Xcode Cloud. Lo script post-clone usa CI_BUILD_NUMBER per il numero build: deve superare l’ultima build inviata.
-4. Installa la nuova build da TestFlight (versione 0.9.5).
+4. Installa la nuova build da TestFlight (versione 0.9.6).
 
-Novità: barra con sole icone e P iniziale, Tap ridisegnati, login/registrazione nuovi, swipe verso sinistra sulle chat per eliminarle con conferma, avatar neutri. Mantiene la P originale e l’apertura animata, i salvataggi aggiornati e il fix UIScene del crash.
+Novità 0.9.6: storie viste senza bordo colorato, rimosso il pulsante Mi piace (restano reazioni e risposte), ritorno al profilo di origine quando chiudi o termini una storia, fulmine pieno e nuovo Tap disponibile dopo 24 ore. I Tap precedenti senza orario restano subito reinviabili.
+
+Comprende anche: barra con sole icone e P iniziale, Tap ridisegnati, login/registrazione nuovi, swipe verso sinistra sulle chat per eliminarle con conferma, avatar neutri. Mantiene la P originale e l’apertura animata, i salvataggi aggiornati e il fix UIScene del crash.
 
 Eliminare una chat rimuove messaggi, vocali e copie delle foto/album presenti nella conversazione locale; non blocca il profilo e non elimina i tuoi album originali. I dati della demo rimangono locali.
 
