@@ -1,43 +1,36 @@
-# PRISM iOS 0.9.3 — progetto per Xcode Cloud e TestFlight
+# PRISM 0.11.0 — prima anteprima online
 
-Apri PRISM.xcodeproj. Schema condiviso: PRISM. Solo iPhone, iOS 16 o superiore. Codice Swift 5, nessun CocoaPods, SPM o pacchetto esterno da scaricare. Interfaccia della versione Android 0.9.3 con wrapper WKWebView, account locale nel Portachiavi e registrazione vocale nativa AVAudioRecorder.
+Questa versione usa https://api.prismdating.app e richiede il backend PRISM 0.2.0 già installato. Non richiede un nuovo aggiornamento del VPS.
 
-## Il tuo Mac vecchio
-La compilazione e la firma finale devono essere eseguite da Xcode Cloud usando un Xcode recente. Non devi compilare sul Mac o trasferire la build usando il suo vecchio Organizer. Il percorso principale è Archive in Xcode Cloud → App Store Connect → post-action TestFlight → iPhone.
+## Cosa è collegato al server
+Registrazione con email, password di almeno 12 caratteri, data di nascita e conferma maggiore età; verifica email e recupero password tramite link; accesso e uscita; modifica del profilo e social; posizione autorizzata dal telefono e ricerca entro 1–5 km; filtri Tutti/Online/Preferiti; preferiti; tap ricevuti e inviati con data e intervallo di 24 ore; chat di testo con emoji, ordinamento recente e cancellazione dalla propria lista tramite swipe; blocco/sblocco e segnalazione; privacy di stato online, ultimo accesso e distanza; eliminazione account con credenziali.
 
-Il primo collegamento di una nuova app/repository a Xcode Cloud può richiedere l'onboarding in una versione di Xcode supportata. Il file ZIP non può sostituire quel collegamento. Dopo l'onboarding, workflow e build si possono gestire su App Store Connect dal browser. Un workflow di ATX Player non va sovrascritto con PRISM: sono due app con bundle ID e schemi diversi.
+La sessione viene conservata nel Keychain su iOS e cifrata con Android Keystore su Android; il token non viene passato al JavaScript. I dati personali visualizzati restano in memoria nel client. Il server salva i dati reali. Nessun profilo o messaggio dimostrativo viene creato.
 
-## Prima di caricare i file
-1. In Config/App.xcconfig inserisci il tuo DEVELOPMENT_TEAM (Team ID Apple di 10 caratteri).
-2. Il bundle predefinito è app.prism.dating. Registralo nel tuo account Apple o sostituiscilo con un identificativo disponibile. Lo stesso identificativo deve essere scelto nel record app su App Store Connect.
-3. Crea il record app PRISM in App Store Connect, piattaforma iOS, bundle ID corrispondente e SKU a tua scelta.
-4. Metti tutti i file dello ZIP in un repository Git dedicato a PRISM, con PRISM.xcodeproj, PRISM e ci_scripts alla radice. Non mettere una cartella extra sopra al progetto senza adeguare il percorso nel workflow.
-5. Conserva il permesso eseguibile degli script. Da Terminale nella cartella del progetto: `git add .` e `git update-index --chmod=+x ci_scripts/ci_post_clone.sh ci_scripts/ci_post_xcodebuild.sh export_ipa.sh`, poi commit e push. Il Mac vecchio può gestire i file/Git; non serve compilare.
+## Primo test su due telefoni
+1. Installa l'APK aggiornato o la nuova build TestFlight.
+2. Registra due account nuovi con email differenti. Gli account locali della demo non sono account del server e non vengono trasferiti.
+3. Apri il link di conferma ricevuto via email, quindi accedi nell'app.
+4. Consenti la posizione su entrambi i telefoni e premi Attiva posizione. I telefoni devono essere entro il raggio selezionato, massimo 5 km, e aver aggiornato la posizione.
+5. Controlla profili, preferiti, tap, chat, modifica profilo e blocco. Se non ci sono utenti reali in zona, la griglia vuota è corretta.
+6. Prova il recupero password e, con un account di prova, la cancellazione account.
 
-## Workflow Xcode Cloud
-- Progetto: PRISM.xcodeproj; schema: PRISM.
-- Ambiente: ultima versione stabile di Xcode disponibile nel tuo account Cloud e macOS corrispondente.
-- Azione: Archive, piattaforma iOS, configurazione Release, dispositivo generico iOS.
-- Preparazione distribuzione: TestFlight/App Store Connect (o equivalente etichetta della UI Apple).
-- Firma automatica col tuo Team Apple.
-- Post-action: TestFlight Internal Testing, scegli un gruppo interno già creato su App Store Connect. Per il primo test personale usa un gruppo interno a cui appartieni.
-- Puoi fornire PRISM_TEAM_ID e PRISM_BUNDLE_ID come variabili del workflow al posto di modificare Config/App.xcconfig. Lo script post-clone imposta il numero build dal CI_BUILD_NUMBER.
-- Non serve una chiave API .p8 per questo percorso gestito da Apple.
+## Limiti di questa fase
+Questa è una build pilota per verificare il collegamento reale, non la versione finale per il pubblico. Foto profilo, foto in chat, album, storie e audio non sono ancora collegati al backend e non sono disponibili in questa build. Non vengono inviati finti contenuti e i dati della precedente demo non vengono caricati sul server.
 
-Una volta completata l'elaborazione della build su App Store Connect, assegnala al gruppo se non lo fa la post-action, compila le informazioni richieste e installala dall'app TestFlight sull'iPhone. I tester esterni hanno un processo beta review separato.
+Gli aggiornamenti delle chat e delle liste arrivano ogni 7 secondi mentre l'app è aperta. Non sono ancora notifiche push: ad app chiusa non arriva una notifica. Anche pannello amministrativo, gestione operativa delle segnalazioni, visualizzazioni del profilo e acquisti PRISM EXTRA restano da implementare. Le segnalazioni vengono salvate nel database, ma non c'è ancora un pannello per lavorarle.
 
-## Se vuoi comunque scaricare un IPA
-Scarica l'artefatto App Store Connect firmato dalla build Cloud quando disponibile. Se hai soltanto un .xcarchive, lo script export_ipa.sh può esportarlo usando Xcode recente, Team e firma validi; non rende compatibile il vecchio Xcode e non firma senza account Apple. Non serve per il percorso TestFlight diretto. Non usare un IPA da simulatore o firmato Ad Hoc per il caricamento App Store Connect.
+## Verifiche effettuate
+Compilazione Java e DEX, confezionamento e firma dell'APK; confronto della firma con la versione precedente; controlli JavaScript; test automatici delle due interfacce su registrazione/verifica/accesso, posizione, preferiti, tap, retry dei messaggi senza duplicati, ricezione messaggi senza perdere la bozza, blocco, privacy, modifica e swipe di cancellazione; controllo visivo delle schermate su formato telefono.
 
-## Cosa è incluso e cosa no
-Incluse le funzioni locali sviluppate su Android: profili, anteprima e gallerie a schermo intero, album personali e condivisione temporanea, storie, reazioni, Tap, chat, voce, privacy/blocchi, social, filtri e raggio dimostrativo. Non si trasferiscono i dati locali già salvati su Android. Foto/scadenze sono meccanismi dimostrativi locali, non protezione da screenshot.
+I test del client usano un server simulato solo nell'ambiente di verifica, escluso dai pacchetti distribuiti. Non sostituiscono il test reale fra dispositivi sul VPS. Il progetto iOS è preparato per Xcode Cloud; la compilazione iOS e il test su dispositivo devono essere completati su Xcode Cloud/TestFlight.
 
-Non è presente un server: non ci sono persone reali, distanza GPS, account remoti o consegna di messaggi tra dispositivi. L'accesso demo resta disponibile. Il Portachiavi conserva l'account locale; può sopravvivere a una disinstallazione, usa Elimina account nell'app se vuoi rimuoverlo.
+## Pubblicare la build iOS con Xcode Cloud
+1. Estrai il pacchetto completo e aggiorna nel repository le cartelle PRISM, PRISM.xcodeproj, Config e ci_scripts, mantenendo la stessa struttura. Non caricare lo ZIP come file unico nel repository.
+2. Mantieni il Bundle ID app.prism.dating e il tuo Team ID Apple. In Config/App.xcconfig il Team è lasciato vuoto: puoi conservarlo dal repository esistente o impostare PRISM_TEAM_ID nel workflow Xcode Cloud.
+3. La versione è 0.11.0, build locale 14. Il post-clone usa CI_BUILD_NUMBER se presente: il numero finale deve essere superiore a quello già caricato su App Store Connect.
+4. Esegui il workflow Archive e distribuzione a TestFlight che usavi già. Non serve compilare o trasferire dal vecchio Mac.
+5. La gestione UIScene del fix di avvio è mantenuta. Il post-clone non scarica dipendenze esterne.
+6. Dopo la compilazione, prova registrazione, apertura email, accesso e permesso posizione su iPhone.
 
-## Verifica e limiti
-Questo pacchetto è un progetto sorgente, non un IPA compilato o firmato. In questo ambiente non è disponibile Xcode/macOS: non è stata eseguita una build iOS. Sono stati controllati struttura del progetto/schema, plist, risorse, asset icona, script e JavaScript. La prima build Xcode Cloud deve confermare compilazione, firma e funzionamento su iPhone, in particolare foto, microfono, tastiera, gesti e audio. Non si garantisce approvazione Apple.
-
-Fonti Apple:
-- https://developer.apple.com/documentation/xcode/configuring-your-first-xcode-cloud-workflow
-- https://developer.apple.com/documentation/xcode/distributing-your-xcode-cloud-builds-through-testflight
-- https://developer.apple.com/documentation/xcode/environment-variable-reference
+Il manifest privacy è aggiornato per i dati dell'anteprima online. Prima della distribuzione pubblica aggiorna anche le risposte App Privacy in App Store Connect e la policy del servizio. Riferimenti tecnici: https://developer.apple.com/documentation/technotes/tn3184-adding-data-collection-details-to-your-privacy-manifest e https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacycollecteddatatypes/nsprivacycollecteddatatype

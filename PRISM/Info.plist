@@ -24,12 +24,6 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>Scatta una foto per il profilo, gli album o le storie.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Registra messaggi vocali che scegli di inviare nelle chat.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Scegli foto per il profilo, gli album, le storie e le chat.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -66,5 +60,7 @@
 	</array>
 	<key>UIUserInterfaceStyle</key>
 	<string>Dark</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>PRISM usa la posizione per mostrarti i profili entro il raggio scelto.</string>
 </dict>
 </plist>

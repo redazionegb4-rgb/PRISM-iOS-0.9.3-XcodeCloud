@@ -1,248 +1,33 @@
 // !$*UTF8*$!
-{
-	archiveVersion = 1;
-	classes = {
-	};
-	objectVersion = 56;
-	objects = {
-
-/* Begin PBXBuildFile section */
-		263D55B9D1028AFCC2BF3E02 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7508EF28938C079BDC9AE35F /* AppDelegate.swift */; };
-		58305B5EEAAB1C31EA692967 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 26B2A637F7DC4079D5AB78A5 /* PrivacyInfo.xcprivacy */; };
-		A6DFC2A962891235249C6706 /* PrismViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B93C59BB4B785A3FAFC819C6 /* PrismViewController.swift */; };
-		AA43A7C1699B76CFD7FEBFAA /* Web in Resources */ = {isa = PBXBuildFile; fileRef = A8323A2A9B34AE7E0CBE8181 /* Web */; };
-		D14099262BF83552E3CC7778 /* LocalAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75395BFF2CAA57F91E74E6B6 /* LocalAccount.swift */; };
-		F533077732FDE75F7831EE1B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 28AAD1477D5182D66D4B03B3 /* Assets.xcassets */; };
-/* End PBXBuildFile section */
-
-/* Begin PBXFileReference section */
-		26B2A637F7DC4079D5AB78A5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		28AAD1477D5182D66D4B03B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		7508EF28938C079BDC9AE35F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		75395BFF2CAA57F91E74E6B6 /* LocalAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAccount.swift; sourceTree = "<group>"; };
-		7B594B6DB375E1BF3F23CDD6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		999E969B97A47BD1ED78D592 /* PRISM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PRISM.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A8323A2A9B34AE7E0CBE8181 /* Web */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Web; sourceTree = "<group>"; };
-		B93C59BB4B785A3FAFC819C6 /* PrismViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrismViewController.swift; sourceTree = "<group>"; };
-		E9472E50F364EB2920FC3EC9 /* App.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = App.xcconfig; sourceTree = "<group>"; };
-/* End PBXFileReference section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		AF39DD055C3EF8226FBE929D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
-
-/* Begin PBXGroup section */
-		01263B1BC6BF319D6C09042C /* Config */ = {
-			isa = PBXGroup;
-			children = (
-				E9472E50F364EB2920FC3EC9 /* App.xcconfig */,
-			);
-			path = Config;
-			sourceTree = "<group>";
-		};
-		2EB2D8158FC6EF9EB19CB439 = {
-			isa = PBXGroup;
-			children = (
-				A7D8CE70846932FEE851CAD6 /* PRISM */,
-				01263B1BC6BF319D6C09042C /* Config */,
-				FE0A091FDBFB3E9C31B7A1BD /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		A7D8CE70846932FEE851CAD6 /* PRISM */ = {
-			isa = PBXGroup;
-			children = (
-				7508EF28938C079BDC9AE35F /* AppDelegate.swift */,
-				B93C59BB4B785A3FAFC819C6 /* PrismViewController.swift */,
-				75395BFF2CAA57F91E74E6B6 /* LocalAccount.swift */,
-				28AAD1477D5182D66D4B03B3 /* Assets.xcassets */,
-				A8323A2A9B34AE7E0CBE8181 /* Web */,
-				7B594B6DB375E1BF3F23CDD6 /* Info.plist */,
-				26B2A637F7DC4079D5AB78A5 /* PrivacyInfo.xcprivacy */,
-			);
-			path = PRISM;
-			sourceTree = "<group>";
-		};
-		FE0A091FDBFB3E9C31B7A1BD /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				999E969B97A47BD1ED78D592 /* PRISM.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-/* End PBXGroup section */
-
-/* Begin PBXNativeTarget section */
-		61AD50A9B9189CC3CF187456 /* PRISM */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6814DB48E543EF8E20CDF461 /* Build configuration list for PBXNativeTarget "PRISM" */;
-			buildPhases = (
-				2EB56BE3C2D93CDAB0C52E67 /* Sources */,
-				AF39DD055C3EF8226FBE929D /* Frameworks */,
-				87DF60DE337FB58864343E39 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = PRISM;
-			productName = PRISM;
-			productReference = 999E969B97A47BD1ED78D592 /* PRISM.app */;
-			productType = "com.apple.product-type.application";
-		};
-/* End PBXNativeTarget section */
-
-/* Begin PBXProject section */
-		F6F4DA8D93E88A08220E03B7 /* Project object */ = {
-			isa = PBXProject;
-			attributes = {
-				LastUpgradeCheck = 1500;
-				TargetAttributes = {
-					61AD50A9B9189CC3CF187456 = {
-						CreatedOnToolsVersion = 15.0;
-						ProvisioningStyle = Automatic;
-					};
-				};
-			};
-			buildConfigurationList = 5D7731714D3E69D68AA8D7ED /* Build configuration list for PBXProject "PRISM" */;
-			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = it;
-			hasScannedForEncodings = 0;
-			knownRegions = (
-				it,
-				en,
-				Base,
-			);
-			mainGroup = 2EB2D8158FC6EF9EB19CB439;
-			productRefGroup = FE0A091FDBFB3E9C31B7A1BD /* Products */;
-			projectDirPath = "";
-			projectRoot = "";
-			targets = (
-				61AD50A9B9189CC3CF187456 /* PRISM */,
-			);
-		};
-/* End PBXProject section */
-
-/* Begin PBXResourcesBuildPhase section */
-		87DF60DE337FB58864343E39 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F533077732FDE75F7831EE1B /* Assets.xcassets in Resources */,
-				AA43A7C1699B76CFD7FEBFAA /* Web in Resources */,
-				58305B5EEAAB1C31EA692967 /* PrivacyInfo.xcprivacy in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXSourcesBuildPhase section */
-		2EB56BE3C2D93CDAB0C52E67 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				263D55B9D1028AFCC2BF3E02 /* AppDelegate.swift in Sources */,
-				A6DFC2A962891235249C6706 /* PrismViewController.swift in Sources */,
-				D14099262BF83552E3CC7778 /* LocalAccount.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXSourcesBuildPhase section */
-
-/* Begin XCBuildConfiguration section */
-		1D8C0C6B1D22EA8C7669B263 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-			};
-			name = Release;
-		};
-		75BB3D5A44EA88B6630AB580 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = E9472E50F364EB2920FC3EC9 /* App.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = B8SC92LPR5;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = PRISM/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-			};
-			name = Debug;
-		};
-		78E9FF212122B0C0397A6DB4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = E9472E50F364EB2920FC3EC9 /* App.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = B8SC92LPR5;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = PRISM/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-			};
-			name = Release;
-		};
-		BFD315016DE16320F7E2120C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-			};
-			name = Debug;
-		};
-/* End XCBuildConfiguration section */
-
-/* Begin XCConfigurationList section */
-		5D7731714D3E69D68AA8D7ED /* Build configuration list for PBXProject "PRISM" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				BFD315016DE16320F7E2120C /* Debug */,
-				1D8C0C6B1D22EA8C7669B263 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		6814DB48E543EF8E20CDF461 /* Build configuration list for PBXNativeTarget "PRISM" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				75BB3D5A44EA88B6630AB580 /* Debug */,
-				78E9FF212122B0C0397A6DB4 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-/* End XCConfigurationList section */
-	};
-	rootObject = F6F4DA8D93E88A08220E03B7 /* Project object */;
-}
+{ archiveVersion = 1; classes = {}; objectVersion = 56; objects = {
+7508EF28938C079BDC9AE35F = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+263D55B9D1028AFCC2BF3E02 = { isa = PBXBuildFile; fileRef = 7508EF28938C079BDC9AE35F; };
+B93C59BB4B785A3FAFC819C6 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrismViewController.swift; sourceTree = "<group>"; };
+A6DFC2A962891235249C6706 = { isa = PBXBuildFile; fileRef = B93C59BB4B785A3FAFC819C6; };
+75395BFF2CAA57F91E74E6B6 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAccount.swift; sourceTree = "<group>"; };
+D14099262BF83552E3CC7778 = { isa = PBXBuildFile; fileRef = 75395BFF2CAA57F91E74E6B6; };
+28AAD1477D5182D66D4B03B3 = { isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+A8323A2A9B34AE7E0CBE8181 = { isa = PBXFileReference; lastKnownFileType = folder; path = Web; sourceTree = "<group>"; };
+7B594B6DB375E1BF3F23CDD6 = { isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+26B2A637F7DC4079D5AB78A5 = { isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+F533077732FDE75F7831EE1B = { isa = PBXBuildFile; fileRef = 28AAD1477D5182D66D4B03B3; };
+AA43A7C1699B76CFD7FEBFAA = { isa = PBXBuildFile; fileRef = A8323A2A9B34AE7E0CBE8181; };
+58305B5EEAAB1C31EA692967 = { isa = PBXBuildFile; fileRef = 26B2A637F7DC4079D5AB78A5; };
+E9472E50F364EB2920FC3EC9 = { isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = App.xcconfig; sourceTree = "<group>"; };
+999E969B97A47BD1ED78D592 = { isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PRISM.app; sourceTree = BUILT_PRODUCTS_DIR; };
+A7D8CE70846932FEE851CAD6 = { isa = PBXGroup; children = (7508EF28938C079BDC9AE35F,B93C59BB4B785A3FAFC819C6,75395BFF2CAA57F91E74E6B6,28AAD1477D5182D66D4B03B3,A8323A2A9B34AE7E0CBE8181,7B594B6DB375E1BF3F23CDD6,26B2A637F7DC4079D5AB78A5); path = PRISM; sourceTree = "<group>"; };
+01263B1BC6BF319D6C09042C = { isa = PBXGroup; children = (E9472E50F364EB2920FC3EC9); path = Config; sourceTree = "<group>"; };
+FE0A091FDBFB3E9C31B7A1BD = { isa = PBXGroup; children = (999E969B97A47BD1ED78D592); name = Products; sourceTree = "<group>"; };
+2EB2D8158FC6EF9EB19CB439 = { isa = PBXGroup; children = (A7D8CE70846932FEE851CAD6,01263B1BC6BF319D6C09042C,FE0A091FDBFB3E9C31B7A1BD); sourceTree = "<group>"; };
+2EB56BE3C2D93CDAB0C52E67 = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (263D55B9D1028AFCC2BF3E02,A6DFC2A962891235249C6706,D14099262BF83552E3CC7778); runOnlyForDeploymentPostprocessing = 0; };
+87DF60DE337FB58864343E39 = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (F533077732FDE75F7831EE1B,AA43A7C1699B76CFD7FEBFAA,58305B5EEAAB1C31EA692967); runOnlyForDeploymentPostprocessing = 0; };
+AF39DD055C3EF8226FBE929D = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+BFD315016DE16320F7E2120C = { isa = XCBuildConfiguration; buildSettings = { CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; SDKROOT = iphoneos; IPHONEOS_DEPLOYMENT_TARGET = 16.0; SWIFT_OPTIMIZATION_LEVEL = "-Onone"; DEBUG_INFORMATION_FORMAT = dwarf; ONLY_ACTIVE_ARCH = YES; }; name = Debug; };
+75BB3D5A44EA88B6630AB580 = { isa = XCBuildConfiguration; baseConfigurationReference = E9472E50F364EB2920FC3EC9; buildSettings = { ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = PRISM/Info.plist; PRODUCT_NAME = "$(TARGET_NAME)"; LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks"); SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SUPPORTS_MACCATALYST = NO; SWIFT_EMIT_LOC_STRINGS = YES; SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG; }; name = Debug; };
+1D8C0C6B1D22EA8C7669B263 = { isa = XCBuildConfiguration; buildSettings = { CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; SDKROOT = iphoneos; IPHONEOS_DEPLOYMENT_TARGET = 16.0; SWIFT_COMPILATION_MODE = wholemodule; DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym"; }; name = Release; };
+78E9FF212122B0C0397A6DB4 = { isa = XCBuildConfiguration; baseConfigurationReference = E9472E50F364EB2920FC3EC9; buildSettings = { ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = PRISM/Info.plist; PRODUCT_NAME = "$(TARGET_NAME)"; LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks"); SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SUPPORTS_MACCATALYST = NO; SWIFT_EMIT_LOC_STRINGS = YES;  }; name = Release; };
+5D7731714D3E69D68AA8D7ED = { isa = XCConfigurationList; buildConfigurations = (BFD315016DE16320F7E2120C,1D8C0C6B1D22EA8C7669B263); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+6814DB48E543EF8E20CDF461 = { isa = XCConfigurationList; buildConfigurations = (75BB3D5A44EA88B6630AB580,78E9FF212122B0C0397A6DB4); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+61AD50A9B9189CC3CF187456 = { isa = PBXNativeTarget; buildConfigurationList = 6814DB48E543EF8E20CDF461; buildPhases = (2EB56BE3C2D93CDAB0C52E67,AF39DD055C3EF8226FBE929D,87DF60DE337FB58864343E39); buildRules = (); dependencies = (); name = PRISM; productName = PRISM; productReference = 999E969B97A47BD1ED78D592; productType = "com.apple.product-type.application"; };
+F6F4DA8D93E88A08220E03B7 = { isa = PBXProject; attributes = { LastUpgradeCheck = 1500; TargetAttributes = { 61AD50A9B9189CC3CF187456 = { CreatedOnToolsVersion = 15.0; ProvisioningStyle = Automatic; }; }; }; buildConfigurationList = 5D7731714D3E69D68AA8D7ED; compatibilityVersion = "Xcode 14.0"; developmentRegion = it; hasScannedForEncodings = 0; knownRegions = (it,en,Base); mainGroup = 2EB2D8158FC6EF9EB19CB439; productRefGroup = FE0A091FDBFB3E9C31B7A1BD; projectDirPath = ""; projectRoot = ""; targets = (61AD50A9B9189CC3CF187456); };
+}; rootObject = F6F4DA8D93E88A08220E03B7; }
