@@ -1,0 +1,22 @@
+PRISM iOS 0.9.4 — AGGIORNAMENTO
+
+1. Nella radice del tuo repository, copia e sostituisci le cartelle PRISM e ci_scripts di questo ZIP, unendo le cartelle esistenti. Conserva gli altri file del progetto.
+   Web/index.html e Web/prism-mark.svg devono essere entrambi presenti.
+   Il catalogo AppIcon va sostituito con tutte le immagini incluse.
+   AppDelegate, Info.plist e PrismViewController mantengono anche la correzione UIScene del crash all'avvio.
+2. In Config/App.xcconfig modifica solo MARKETING_VERSION = 0.9.4.
+   Non cambiare DEVELOPMENT_TEAM o PRODUCT_BUNDLE_IDENTIFIER: lo ZIP non contiene il tuo file Config.
+3. Fai commit di tutti i file e avvia un nuovo Archive in Xcode Cloud.
+   ci_post_clone.sh mantiene Team/bundle e imposta CURRENT_PROJECT_VERSION dal CI_BUILD_NUMBER.
+   Controlla che il numero build sia superiore all'ultima build caricata su App Store Connect.
+4. Con il post-action TestFlight già configurato, installa la nuova build e verifica che la versione mostrata sia 0.9.4.
+
+CONTROLLI SU IPHONE
+- Apri un profilo e aggiungi/rimuovi la stella: la griglia Preferiti si aggiorna subito.
+- Crea un album con una foto, salva e chiudi il pannello: conteggio e album sono aggiornati.
+- Modifica il profilo: foto, nome e avatar in basso si aggiornano.
+- Tocca il campo Messaggio: niente riquadro blu, resta un bordo ambra discreto.
+- Riavvia l'app: logo e caricamento breve, poi login o griglia.
+- Verifica la nuova icona nella schermata Home dopo aver installato la build.
+
+Test automatici JavaScript/DOM e controlli statici superati. Non compilato o eseguito con Xcode in questo ambiente. Dati e messaggi restano locali nella demo: questo aggiornamento non introduce un server.
