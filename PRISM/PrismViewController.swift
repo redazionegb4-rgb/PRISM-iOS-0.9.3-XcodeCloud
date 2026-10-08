@@ -5,8 +5,11 @@ import CoreLocation
 import AVFoundation
 import UserNotifications
 import FirebaseMessaging
+import StoreKit
 
 final class PrismViewController: UIViewController, WKScriptMessageHandlerWithReply, WKNavigationDelegate, WKUIDelegate, CLLocationManagerDelegate, URLSessionTaskDelegate, AVAudioRecorderDelegate {
+    private var purchaseObserver: Task<Void,Never>?
+    private var storeBusy = false
     private let privacyShield = UIView()
     private let protectionLabel = UILabel()
     private var inBackground = false
@@ -51,6 +54,16 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
             webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             webView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        purchaseObserver = Task { [weak self] in
+            for await update in StoreKit.Transaction.updates {
+                guard let self = self, case .verified(let transaction) = update,
+                      transaction.productID == "app.prism.dating.extra.monthly", self.savedToken() != nil else { continue }
+                if (try? await self.verifyStoreTransaction(transaction)) != nil {
+                    await transaction.finish()
+                    await MainActor.run { self.webView.evaluateJavaScript("window.prismResume&&window.prismResume()",completionHandler:nil) }
+                }
+            }
+        }
         locationManager.delegate = self
         privacyShield.backgroundColor = view.backgroundColor
         privacyShield.translatesAutoresizingMaskIntoConstraints = false
@@ -108,6 +121,7 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
                 DispatchQueue.main.async { if granted { UIApplication.shared.registerForRemoteNotifications() }; self?.pushInfo(replyHandler) }
             }
         case "pushConsumed": UserDefaults.standard.removeObject(forKey:"prismPushPending"); replyHandler(["status":200,"data":[:]],nil)
+        case "billing": storeAction(body,reply:replyHandler)
         case "api": api(body, reply: replyHandler)
         case "voiceStart": requestRecording(); replyHandler(["ok": true], nil)
         case "voiceStop": finishRecording(send: true); replyHandler(["ok": true], nil)
@@ -272,6 +286,62 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
     }
     func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder, error: Error?) { finishRecording(send: false); result(error: "Errore nella registrazione.") }
     private enum RecorderError: Error { case failed }
-    deinit { voiceTimer?.invalidate(); recorder?.stop(); if let url = voiceURL { try? FileManager.default.removeItem(at: url) }; NotificationCenter.default.removeObserver(self); session.invalidateAndCancel() }
+    private func verifyStoreTransaction(_ transaction: StoreKit.Transaction) async throws -> [String:Any] {
+        guard let token = savedToken() else { throw StoreFailure.message("Accedi prima di ripristinare gli acquisti.") }
+        var request = URLRequest(url:URL(string:"https://api.prismdating.app/v1/me/purchase")!)
+        request.httpMethod = "POST"
+        request.setValue("application/json",forHTTPHeaderField:"Content-Type")
+        request.setValue("Bearer " + token,forHTTPHeaderField:"Authorization")
+        request.httpBody = try JSONSerialization.data(withJSONObject:["store":"apple","reference":String(transaction.originalID)])
+        let (data,response) = try await session.data(for:request)
+        let value = (try? JSONSerialization.jsonObject(with:data)) as? [String:Any] ?? [:]
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw StoreFailure.message(value["detail"] as? String ?? "Verifica non riuscita. Usa Ripristina acquisti.") }
+        return value
+    }
+    private enum StoreFailure: Error { case message(String) }
+    private func storeAction(_ body:[String:Any],reply:@escaping(Any?,String?)->Void) {
+        if body["operation"] as? String == "manage" {
+            UIApplication.shared.open(URL(string:"https://apps.apple.com/account/subscriptions")!)
+            reply(["status":200,"data":[:]],nil); return
+        }
+        guard !storeBusy, savedToken() != nil else { reply(["status":0,"data":["detail":"Accedi oppure attendi la richiesta allo store in corso."]],nil); return }
+        let action = body["operation"] as? String ?? "info"
+        guard ["info","buy","restore"].contains(action) else { reply(nil,"Azione non valida"); return }
+        storeBusy = true
+        Task { @MainActor [weak self] in
+            guard let self = self else { reply(nil,"Operazione annullata"); return }
+            defer { self.storeBusy = false }
+            do {
+                if action == "restore" {
+                    try await AppStore.sync()
+                    var restored = 0
+                    for await result in StoreKit.Transaction.currentEntitlements {
+                        guard case .verified(let transaction) = result, transaction.productID == "app.prism.dating.extra.monthly" else { continue }
+                        _ = try await self.verifyStoreTransaction(transaction)
+                        await transaction.finish(); restored += 1
+                    }
+                    reply(["status":200,"data":["restored":restored]],nil); return
+                }
+                let products = try await Product.products(for:["app.prism.dating.extra.monthly"])
+                guard let product = products.first else { throw StoreFailure.message("PRISM EXTRA non è ancora disponibile sull’App Store.") }
+                guard let period = product.subscription?.subscriptionPeriod, period.unit == .month, period.value == 1 else { throw StoreFailure.message("Il piano mensile non è disponibile.") }
+                if action == "info" { reply(["status":200,"data":["price":product.displayPrice]],nil); return }
+                guard let account = body["user_id"] as? String, let uid = UUID(uuidString:account) else { throw StoreFailure.message("Account PRISM non disponibile. Accedi di nuovo.") }
+                let result = try await product.purchase(options:[.appAccountToken(uid)])
+                switch result {
+                case .success(let verification):
+                    guard case .verified(let transaction) = verification else { throw StoreFailure.message("Acquisto non verificato da Apple.") }
+                    let entitlement = try await self.verifyStoreTransaction(transaction)
+                    await transaction.finish()
+                    reply(["status":200,"data":["entitlement":entitlement]],nil)
+                case .userCancelled:reply(["status":200,"data":["cancelled":true]],nil)
+                case .pending:reply(["status":200,"data":["pending":true]],nil)
+                @unknown default:throw StoreFailure.message("Acquisto non completato.")
+                }
+            } catch StoreFailure.message(let message) { reply(["status":0,"data":["detail":message]],nil)
+            } catch { reply(["status":0,"data":["detail":"Store temporaneamente non disponibile. Riprova o ripristina gli acquisti."]],nil) }
+        }
+    }
+    deinit { purchaseObserver?.cancel(); voiceTimer?.invalidate(); recorder?.stop(); if let url = voiceURL { try? FileManager.default.removeItem(at: url) }; NotificationCenter.default.removeObserver(self); session.invalidateAndCancel() }
     private enum SessionError: Error { case storage }
 }
