@@ -1,17 +1,16 @@
-PRISM iOS 0.9.8 — AGGIORNAMENTO COMPLETO DELLA UI
+PRISM iOS 0.10.1 — FREE/EXTRA E HEADER
 
-1. Nella radice del repository, unisci e sostituisci le cartelle PRISM e ci_scripts con quelle contenute nello ZIP. Fai commit anche di tutti i file Web/*.svg e del catalogo icone.
-2. In Config/App.xcconfig modifica solo MARKETING_VERSION = 0.9.8.
-   Conserva il tuo DEVELOPMENT_TEAM e PRODUCT_BUNDLE_IDENTIFIER; la patch non contiene Config o project.pbxproj.
-3. Avvia un nuovo Archive in Xcode Cloud. Lo script post-clone usa CI_BUILD_NUMBER per il numero build: deve superare l’ultima build inviata.
-4. Installa la nuova build da TestFlight (versione 0.9.8).
+1. Unisci e sostituisci le cartelle PRISM e ci_scripts nella radice del repository con quelle dello ZIP.
+2. In Config/App.xcconfig modifica solo MARKETING_VERSION = 0.10.1. Conserva DEVELOPMENT_TEAM e PRODUCT_BUNDLE_IDENTIFIER.
+3. Fai commit e avvia un nuovo Archive in Xcode Cloud. CI_BUILD_NUMBER deve superare l’ultima build inviata.
+4. Prova la nuova versione 0.10.1 da TestFlight.
 
-Novità 0.9.8: profilo personale, modifica profilo e gestione album ridisegnati; riquadro unico per storie e risposte. Mantiene le risposte alle storie con anteprima completa di foto o frase sullo sfondo originale, risposta ai singoli messaggi con citazione cliccabile, bozze automatiche e persistenti nella lista chat.
+Novità 0.10.1: confronto Free/Extra con modalità demo senza acquisti; Free con due foto una sola volta al giorno, un album e raggio 5 km; Extra con foto illimitate, due album e raggio 50 km. Il secondo album resta salvato ma nascosto nel Free. Conferme di lettura previste, non operative senza destinatari reali. Header senza numero versione e filtri compatti. Specifica dettagliata nel documento allegato.
 
-Mantiene: storie viste senza bordo colorato, rimosso il pulsante Mi piace (restano reazioni e risposte), ritorno al profilo di origine quando chiudi o termini una storia, fulmine pieno e nuovo Tap disponibile dopo 24 ore. I Tap precedenti senza orario restano subito reinviabili.
+Mantiene: pagina Vicino a te ridisegnata, Tutti/Online/Preferiti compatti, aggiornamento tirando verso il basso (con indicatore e gestione annullamento), ricerca raggio aggiornata, privacy con interruttori e lista bloccati, conferma sblocco. La proposta PRISM Plus è solo una valutazione, senza acquisti attivi.
 
-Comprende anche: barra con sole icone e P iniziale, Tap ridisegnati, login/registrazione nuovi, swipe verso sinistra sulle chat per eliminarle con conferma, avatar neutri. Mantiene la P originale e l’apertura animata, i salvataggi aggiornati e il fix UIScene del crash.
+Profili: foto ampia apribile a schermo intero, pulsanti preferito/blocco/segnalazione sempre disponibili in alto, bio e preferenze a schede, storia con stato già vista, messaggio e Tap nella barra inferiore. Aggiungere un preferito conserva la posizione di scorrimento. L’anteprima del proprio profilo usa la stessa grafica, con tutte le foto, dettagli e social.
 
-Eliminare una chat rimuove messaggi, vocali e copie delle foto/album presenti nella conversazione locale; non blocca il profilo e non elimina i tuoi album originali. I dati della demo rimangono locali.
+Aggiornamento cumulativo: include il restyling 0.9.8 di profilo personale, album, editor e risposte alle storie; conserva tutti gli aggiornamenti precedenti, i salvataggi locali, le bozze, le citazioni e il cooldown Tap di 24 ore. Mantiene anche il fix UIScene e lo script Xcode Cloud corretto.
 
-Controlli automatici DOM e browser superati. Compilazione/firma iOS e funzionamento sul dispositivo da verificare in Xcode Cloud/TestFlight.
+È una demo locale senza servizio online: profili, distanze e conversazioni sono dimostrativi. Accesso nativo, registrazione audio e selezione foto richiedono verifica sul dispositivo. Interfaccia controllata nel browser per entrambe le piattaforme; iOS non compilato in questo ambiente.
