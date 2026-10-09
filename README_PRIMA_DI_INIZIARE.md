@@ -1,66 +1,70 @@
-# PRISM 0.11.9 — Assistenza, sospensioni e foto pubbliche
+# PRISM 0.12.17 — EXTRA: città e modalità discreta
 
-Versioni: backend 0.3.8, schema 9; Android 0.11.9 (codice 33); iOS 0.11.9 (build iniziale 25, poi numero progressivo Xcode Cloud).
+App Android 0.12.17, codice 51. Progetto iOS 0.12.17, build 42 per Xcode Cloud. Backend 0.3.14, schema 12. Sito 1.1.0.
 
-## 1. Aggiorna prima la VPS
+## Cosa cambia
 
-Con WinSCP carica `PRISM-backend-0.3.8-MODERATION.zip` in `/home/ubuntu`. In PuTTY:
+- Free: la barra mantiene il diamante per aprire PRISM EXTRA.
+- EXTRA attivo: il diamante lascia posto al mondo, che apre “Esplora altre città”. La gestione dell’abbonamento resta nel profilo personale.
+- Il fantasmino nella home attiva o disattiva la modalità discreta. È disponibile solo con EXTRA; nel Free apre il confronto dei piani.
+- Con il fantasmino attivo, le nuove visite ai profili non vengono registrate e non generano notifiche di visita. Non cancella le visite già fatte, non nasconde lo stato online e non rende anonimi Tap, chat o visualizzazioni delle storie.
+- La prima versione include 90 città italiane e internazionali ricercabili. Il catalogo si può ampliare nel backend, senza ricompilare le app.
+- La ricerca in una città non cambia la posizione GPS del profilo. La griglia indica le distanze dal centro della città; i profili, le chat e i preferiti mantengono la distanza reale. La preferenza di nascondere la distanza è rispettata anche nella ricerca per città.
+- Le storie restano quelle vicine alla posizione reale. “Torna vicino a me” ripristina la griglia locale.
+- Alla scadenza di EXTRA, entrambe le funzioni smettono di funzionare e la barra torna al diamante. Il backend controlla l’abbonamento a ogni richiesta.
+- Aggiornati confronto EXTRA nell’app e sul sito, comprese le FAQ.
+
+## 1. Aggiorna prima il backend
+
+Con WinSCP carica PRISM-backend-0.3.14.zip in /home/ubuntu. In PuTTY:
 
 ```bash
 cd /home/ubuntu
-python3 -m zipfile -e PRISM-backend-0.3.8-MODERATION.zip prism-admin-038
-cd /home/ubuntu/prism-admin-038/PRISM-backend-restore
+python3 -m zipfile -e PRISM-backend-0.3.14.zip prism-update-0314
+cd /home/ubuntu/prism-update-0314/PRISM-backend-restore
 sudo bash install.sh
-```
-
-L'installatore conserva gli account e le configurazioni SMTP, Firebase, database e acquisti già presenti. Esegue un backup prima dell'aggiornamento e un test in uno schema isolato. Il pannello resta su https://api.prismdating.app/admin, con gli stessi amministratori e password.
-
-```bash
 curl --fail --silent https://api.prismdating.app/health
 ```
 
-Deve riportare `0.3.8`. Il pacchetto non è stato installato automaticamente sulla VPS.
+Il risultato di health deve mostrare versione 0.3.14. Lo script esegue la migrazione che aggiunge la preferenza discreta, conserva i dati e crea un backup prima dell’aggiornamento. Esegue inoltre il test del backend in uno schema isolato, senza inviare vere email o notifiche. Le app precedenti restano compatibili.
 
-## 2. Foto profilo: verifica prima della pubblicazione
+Non installare soltanto l’app: il backend precedente non contiene le nuove funzioni.
 
-Nel pannello apri **Foto da verificare**. Ogni foto del profilo pubblico deve essere approvata dal titolare o da un moderatore. Foto HOT con nudità esplicita e pornografia devono essere rifiutate: non sono ammesse nei profili pubblici.
+## 2. Android
 
-**Anche le foto già caricate prima di questo aggiornamento vengono messe in verifica e nascoste agli altri finché non le approvi.** Dopo l'aggiornamento controlla subito questa sezione. Non vengono cancellate dall'account.
+Installa PRISM-0.12.17.apk sopra la versione precedente. La firma è la stessa, quindi non occorre disinstallare o cancellare i dati. Il pacchetto PRISM-Android-source-0.12.17.zip contiene i sorgenti completi.
 
-- Le foto in attesa o rifiutate restano visibili soltanto al proprietario e agli amministratori autorizzati.
-- Griglia, profili, chat, Tap, visite e preferiti ricevono soltanto foto approvate dal server.
-- Nell'editor app compaiono In verifica / Approvata / Non approvata.
-- La funzione Come appare mostra le sole foto approvate.
-- Riordinare una foto già approvata conserva l'approvazione; un nuovo file richiede una nuova verifica.
-- Una foto rifiutata non viene approvata automaticamente quando viene caricata di nuovo.
-- Gli album privati e le foto inviate in chat non sono esposti al pannello per questo controllo.
+## 3. iOS / Xcode Cloud
 
-Il controllo è **umano, preventivo**. Non è un classificatore automatico della nudità: devi verificare le immagini prima di approvarle. Puoi rifiutare anche una foto già approvata, nascondendola subito nelle risposte successive del server. Una copia già caricata sul dispositivo può rimanere visibile finché il dispositivo aggiorna i dati.
+PRISM-iOS-0.12.17-XcodeCloud.zip contiene il progetto completo. Aggiorna il repository usato da Xcode Cloud come per le versioni precedenti, poi avvia l’archiviazione e la distribuzione TestFlight. Versione 0.12.17, build 42. Non è necessario trasferire l’app dal vecchio Mac.
 
-## 3. Sospensioni e motivi facoltativi
+Il progetto iOS non è stato compilato con Xcode in questo ambiente: la compilazione e la firma avvengono su Xcode Cloud.
 
-Le note amministrative non sono più obbligatorie per sospendere/riattivare, eliminare account, concedere/revocare EXTRA o rimuovere foto/storie. Rimangono il registro attività e la conferma mediante email per eliminare un account.
+## 4. Sito
 
-Quando sospendi un utente, il motivo eventualmente scritto viene mostrato nel popup al suo successivo login con credenziali corrette. Se lasci il campo vuoto, appare un messaggio standard. La sospensione revoca le sessioni e nasconde il profilo. Non scrivere nel motivo informazioni interne che non vuoi mostrare all'utente.
+Carica PRISM-sito-1.1.0-VPS.zip in /home/ubuntu:
 
-## 4. Assistenza Android e iOS
+```bash
+cd /home/ubuntu
+python3 -m zipfile -e PRISM-sito-1.1.0-VPS.zip prism-sito-110
+cd /home/ubuntu/prism-sito-110/PRISM-site-1.1.0
+sudo bash install-site.sh
+```
 
-Rifatti il pulsante Assistenza PRISM nel profilo, l'elenco richieste, il modulo Nuova richiesta e la conversazione con il team. Pulsanti scuri/oro coerenti, testo leggibile, stato della richiesta, campi da 16px per evitare lo zoom automatico su iPhone. Oggetto, messaggi e motivi sono mostrati come testo e non come HTML.
+Il sito conserva lo stile precedente e include le nuove funzioni nella tabella EXTRA e nelle FAQ. Le istruzioni specifiche sono comprese nello ZIP. I link pubblici degli store e le informative definitive vanno ancora collegati se non lo hai già fatto: i link non sono stati inventati.
 
-Le risposte del pannello compaiono nell'app mentre la richiesta è aperta. Una richiesta chiusa non accetta altre risposte: l'utente può aprirne una nuova. Non è stata aggiunta una push separata per l'assistenza.
+## Controlli da fare dopo l’installazione
 
-## 5. Aggiorna le app
+1. Con un utente Free: diamante nella barra; fantasmino apre il piano; nessuna ricerca in un’altra città.
+2. Con EXTRA: mondo nella barra; scegli una città; verifica il banner e poi “Torna vicino a me”.
+3. Con due account: attiva il fantasmino su A, visita il profilo B, verifica che B non riceva una nuova visita. Disattiva il fantasmino e ripeti: la nuova visita deve comparire.
+4. Controlla che le visite precedenti di B restino visibili e che i preferiti siano sempre disponibili.
+5. Verifica la scadenza EXTRA in TestFlight: il ritorno al Free deve disattivare i vantaggi.
 
-Android: installa `PRISM-0.11.9.apk` sopra la versione attuale. Stesso identificativo e firma delle build precedenti. Sorgenti completi: `PRISM-Android-source-0.11.9.zip`.
+## Verifiche eseguite
 
-iOS: estrai `PRISM-iOS-0.11.9-XcodeCloud.zip`, sostituisci i file nel repository già collegato a Xcode Cloud mantenendo progetto, Config, PRISM, ci_scripts e Package.resolved. Esegui commit e avvia una nuova Archive sul nuovo commit. Distribuisci con TestFlight. Non serve compilare o esportare dal vecchio Mac.
+Verificati con interfacce Android/iOS nel browser: cambio barra Free/Extra, fantasmino, filtro città, separazione delle distanze, posizione invariata, preferiti, profili bloccati, scadenza, ritorno alla zona reale e protezione da risposte di rete obsolete. Layout verificati a 320, 390 e 430 pixel. Passano anche i controlli di regressione su chat, menu, swipe e contatori Tap/visite.
 
-## 6. Acquisto EXTRA dalle app
+Test HTTP del backend eseguiti con un adattatore database isolato: permessi Free/Extra, città non valide, preferenza discreta, soppressione di visite e push, ritorno al Free. Il test completo PostgreSQL/PostGIS è incluso in restore_smoke.py e viene eseguito dall’installazione sulla VPS; non è stato eseguito su un database locale in questo ambiente.
 
-Acquisto, ripristino, gestione abbonamento e verifica server Apple/Google sono presenti. Il prezzo è quello restituito dallo store; l'app non simula pagamenti. EXTRA viene concesso soltanto dopo verifica del server e abbinamento all'account PRISM.
-
-Per rendere disponibile il pagamento devi creare i prodotti, attivare le credenziali sulla VPS e provare gli acquisti negli ambienti store. Segui **PRISM-EXTRA-STORE-0.11.9.md**. Senza quelle configurazioni la pagina mostra che gli acquisti non sono ancora disponibili. L'attivazione manuale dal pannello continua a funzionare senza credenziali store.
-
-## Verifica
-
-58 test unitari superati; integrazione PostgreSQL 16/PostGIS superata, compresi moderazione preventiva, approvazione/rifiuto, mancata ripubblicazione di una foto rifiutata, motivi facoltativi e popup sospensione. Interfacce app verificate a 320–430px, pannello a 320–1440px. APK compilato e risorse confrontate con i sorgenti. Le prove UI del pagamento usano uno store simulato per verificare il collegamento dei pulsanti; non dimostrano un pagamento reale. iOS richiede compilazione con Xcode Cloud e prove StoreKit/TestFlight; acquisti reali Apple/Google richiedono configurazione e test negli store.
+APK firmato e verificato; integrità dei pacchetti verificata. Non sono stati effettuati test su telefoni fisici né un caricamento diretto sulla VPS.
