@@ -365,7 +365,21 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
                     products = try await Product.products(for:["app.prism.dating.extra.monthly"])
                 }
                 guard !replied else { return }
-                guard let product = products.first else { throw StoreFailure.message("Apple non restituisce ancora PRISM EXTRA. Se hai appena attivato il contratto o modificato il prodotto, attendi e riprova.") }
+                guard let product = products.first else {
+                    let storefront = await Storefront.current
+                    finish(["status":0,"data":[
+                        "detail":"Apple non restituisce il prodotto PRISM EXTRA. Controlla l’ID prodotto, il prezzo, la localizzazione e la disponibilità in App Store Connect.",
+                        "diagnostics":[
+                            "product_id":"app.prism.dating.extra.monthly",
+                            "bundle_id":Bundle.main.bundleIdentifier ?? "Non disponibile",
+                            "version":Bundle.main.object(forInfoDictionaryKey:"CFBundleShortVersionString") as? String ?? "Non disponibile",
+                            "build":Bundle.main.object(forInfoDictionaryKey:"CFBundleVersion") as? String ?? "Non disponibile",
+                            "storefront":storefront?.countryCode ?? "Non disponibile",
+                            "products_found":0
+                        ]
+                    ]],nil)
+                    return
+                }
                 guard let period = product.subscription?.subscriptionPeriod, period.unit == .month, period.value == 1 else { throw StoreFailure.message("Il piano mensile non è disponibile.") }
                 if action == "info" { finish(["status":200,"data":["price":product.displayPrice]],nil); return }
                 guard let account = body["user_id"] as? String, let uid = UUID(uuidString:account) else { throw StoreFailure.message("Account PRISM non disponibile. Accedi di nuovo.") }
