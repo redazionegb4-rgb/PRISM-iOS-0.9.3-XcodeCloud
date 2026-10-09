@@ -1,48 +1,58 @@
-# PRISM 0.13.1 — Correzioni e reazioni Live
+# PRISM 0.13.2 — Nuova Live e sito
 
-App Android 0.13.1, codice 54. iOS 0.13.1, build 45. Backend 0.3.16, schema 14.
+Android 0.13.2, codice 55. iOS 0.13.2, build 46. Backend 0.3.17, schema 15. Sito 1.2.0.
 
-## Cosa cambia
+## Modifiche
 
-- Corrette le query del catalogo Live e delle richieste ospiti: usano le foto approvate del profilo, senza cercare una colonna inesistente. Era la causa dell’errore di servizio nel catalogo e nel caricamento dei commenti del presentatore.
-- Ogni commento appare subito dopo la conferma del server, senza duplicati. Un errore mantiene il testo da inviare. I nuovi commenti degli altri utenti vengono aggiornati ogni tre secondi.
-- Microfono e fotocamera vengono avviati separatamente. Un problema con la fotocamera non blocca il microfono. Pulsanti con stato acceso/spento, spiegazioni dell’errore e pulsante Riprova audio e video.
-- Sistemata la gestione nativa dei permessi affinché la richiesta di autorizzazione non interrompa l’avvio della diretta come se l’app fosse in background.
-- iOS: la pagina Live segue il bordo superiore della tastiera con il sistema nativo. Eliminata la seconda sottrazione dell’altezza della tastiera; comandi compatti durante la scrittura.
-- Cuori animati con pressioni ripetute, contatore condiviso tra gli utenti della diretta e protezione contro richieste eccessive. La reazione appare immediatamente per chi la invia; gli altri ricevono il conteggio tramite l’aggiornamento della sala.
-- Video locale senza effetto specchio, anche dopo il cambio fotocamera.
-- Sezione commenti più leggibile, barra reazioni dedicata e pannello ospiti mostrato quando serve.
+- Nuova schermata Live: video fermo, commenti sovrapposti in un’area con scorrimento indipendente, comandi compatti e pannello ospiti separato. Il video non viene spinto fuori dalla pagina dai commenti.
+- Eliminato il pulsante invia: il commento si pubblica con Invio della tastiera. Il testo resta disponibile se l’invio fallisce.
+- Anteprima locale tramite il flusso video originale, senza trasformazioni a specchio; aggiornamento del flusso anche dopo il cambio fotocamera.
+- Cuori inviati subito e distribuiti tramite il canale dati LiveKit agli utenti collegati. Conteggio condiviso, animazioni e protezione contro conteggi doppi nei reinvii. Il refresh rimane come recupero in caso di problemi di collegamento.
+- Sito: nuova sezione Live, anteprima illustrativa, menu e FAQ aggiornati. Dirette pubbliche globali, un presentatore e fino a tre ospiti accettati. Nessuna registrazione o replay.
 
-## 1. Aggiorna prima il backend principale
+## 1. Backend: aggiorna per primo
 
-Con WinSCP carica PRISM-backend-0.3.16.zip in /home/ubuntu del VPS principale 141.94.224.242. In PuTTY sullo stesso server:
+Carica PRISM-backend-0.3.17.zip con WinSCP in /home/ubuntu sul VPS principale 141.94.224.242. In PuTTY:
 
 ```bash
 cd /home/ubuntu
-python3 -m zipfile -e PRISM-backend-0.3.16.zip prism-update-0316
-cd /home/ubuntu/prism-update-0316/PRISM-backend
+python3 -m zipfile -e PRISM-backend-0.3.17.zip prism-update-0317
+cd /home/ubuntu/prism-update-0317/PRISM-backend
 sudo bash install.sh
 curl --fail --silent https://api.prismdating.app/health
 ```
 
-Health deve indicare 0.3.16. L’installazione conserva i dati e la configurazione LiveKit già collegata, crea un backup e aggiorna lo schema per i cuori. Non devi reinstallare LiveKit sul server video 178.33.91.9 né trasferire di nuovo le chiavi.
+Health deve indicare 0.3.17. L’installazione conserva i dati e la configurazione LiveKit, crea il backup e applica lo schema 15. Non reinstallare il server video 178.33.91.9 e non trasferire nuovamente le chiavi.
 
-Lo script include nuove prove del catalogo, delle richieste ospiti, dei commenti e dei cuori su uno schema PostgreSQL isolato; simula soltanto il server video e non crea dirette pubbliche reali.
+Le nuove pagine Live sono servite dal backend: questo aggiornamento è necessario anche installando il nuovo APK o la nuova build iOS.
 
 ## 2. Android
 
-Installa PRISM-0.13.1.apk sopra la versione precedente. Stessa firma, nessuna disinstallazione necessaria. Accetta l’accesso a microfono e fotocamera quando richiesto. Se avevi già negato l’accesso, abilitalo nelle autorizzazioni di PRISM.
+Installa PRISM-0.13.2.apk sopra la versione precedente. Stessa firma, nessuna disinstallazione necessaria. Il progetto completo è in PRISM-Android-source-0.13.2.zip.
 
 ## 3. iOS / Xcode Cloud
 
-Il file PRISM-iOS-0.13.1-XcodeCloud.zip contiene il progetto completo. Aggiorna il repository usato da Xcode Cloud e avvia archivio e distribuzione TestFlight: versione 0.13.1, build 45. Il nuovo binario è necessario per le correzioni native di tastiera e permessi; il solo aggiornamento del backend non le applica alla build precedente.
+PRISM-iOS-0.13.2-XcodeCloud.zip contiene il progetto completo. Aggiorna il repository usato da Xcode Cloud e avvia archivio e distribuzione TestFlight: versione 0.13.2, build 46. Mantieni il workflow che distribuisce da Xcode Cloud, senza esportare sul vecchio Mac.
 
-## 4. Verifica sui telefoni
+## 4. Sito
 
-Apri Live: il catalogo deve caricarsi. Avvia una diretta, accetta i permessi e controlla lo stato del microfono e della fotocamera. Con un secondo telefono verifica video/audio, commenti nei due sensi, cuori, richiesta ospite e chiusura della sala. Su iPhone verifica la barra commenti subito sopra la tastiera. Controlla che scritte o oggetti inquadrati non siano invertiti nella tua anteprima.
+Carica PRISM-sito-1.2.0-VPS.zip in /home/ubuntu sul VPS principale. In PuTTY:
 
-## Verifiche effettuate
+```bash
+cd /home/ubuntu
+python3 -m zipfile -e PRISM-sito-1.2.0-VPS.zip prism-sito-120
+cd /home/ubuntu/prism-sito-120/PRISM-site-1.2.0
+sudo bash install-site.sh
+```
 
-72 test backend passati. Test dell’interfaccia Live passati: avvio indipendente dei dispositivi, errore specifico della fotocamera, commenti immediati senza duplicati o salto dei commenti arrivati nel frattempo, testo sicuro, cuori, video non specchiato e layout mobile 320/390/430 pixel. Build Android release compilata e firma verificata.
+Apri https://prismdating.app. CSS e JavaScript hanno un nuovo identificatore per evitare la vecchia grafica in cache. Il sito presenta le Live; le dirette si guardano nelle app.
 
-La compilazione iOS avviene su Xcode Cloud. Il comportamento dei permessi e della tastiera nativa iOS, e audio/video sul VPS reale, devono essere verificati sui telefoni: non sono stati provati con dispositivi fisici in questo ambiente.
+## 5. Prova sui telefoni
+
+Avvia una Live su un telefono e guardala dall’altro. Controlla scritte non invertite nell’anteprima e dopo il cambio fotocamera, video sempre fermo mentre arrivano molti commenti, Invio della tastiera e barra subito sopra la tastiera su iPhone. Invia più cuori dal telefono spettatore: sul telefono presentatore devono apparire subito animazioni e conteggio. Verifica anche una richiesta ospite e l’apertura del pannello ospiti.
+
+## Verifiche
+
+74 test backend passati. Build Android release compilata e firma verificata. Verifiche browser: 300 commenti senza spostare il video, invio con Invio, cambio flusso fotocamera, cuori tramite pacchetti server, rifiuto dei pacchetti provenienti da utenti, pannello ospiti e layout/tastiera a 320/390/430 pixel. Sito verificato a 320/390/430/768/1440 pixel. Catalogo Live verificato con gli asset di entrambe le app.
+
+Le prove del canale video e del broadcast usano simulazioni locali. Audio/video reali, cuori attraverso il VPS e tastiera iOS devono essere confermati sui telefoni. La compilazione iOS avviene su Xcode Cloud. Gli aggiornamenti remoti non sono stati eseguiti da questo ambiente.

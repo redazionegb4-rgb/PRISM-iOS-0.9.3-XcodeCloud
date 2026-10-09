@@ -39,7 +39,7 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         view.backgroundColor = UIColor(red: 0.067, green: 0.063, blue: 0.086, alpha: 1)
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .default()
-        configuration.applicationNameForUserAgent = "PRISM/0.13.1 (+https://prismdating.app)"
+        configuration.applicationNameForUserAgent = "PRISM/0.13.2 (+https://prismdating.app)"
         configuration.allowsInlineMediaPlayback = true
         configuration.mediaTypesRequiringUserActionForPlayback = []
         configuration.userContentController.addScriptMessageHandler(self, contentWorld: .page, name: "prism")
