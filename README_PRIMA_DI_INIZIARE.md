@@ -1,3 +1,7 @@
+# Versione attuale: PRISM 0.13.3 / backend 0.3.18
+
+Usa le istruzioni aggiornate nel file RELEASE-0.13.3.md (app) oppure RELEASE-0.3.18.md (backend). La nota sotto riguarda la precedente versione ed è mantenuta come storico.
+
 # PRISM 0.13.2 — Nuova Live e sito
 
 Android 0.13.2, codice 55. iOS 0.13.2, build 46. Backend 0.3.17, schema 15. Sito 1.2.0.
