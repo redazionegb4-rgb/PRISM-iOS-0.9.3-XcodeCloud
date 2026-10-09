@@ -14,6 +14,9 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
     private let privacyShield = UIView()
     private let protectionLabel = UILabel()
     private var inBackground = false
+    private var livePermissionBusy = false
+    private var standardBottom: NSLayoutConstraint!
+    private var liveBottom: NSLayoutConstraint!
     private var webView: WKWebView!
     private var recorder: AVAudioRecorder?
     private var voiceURL: URL?
@@ -36,7 +39,7 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         view.backgroundColor = UIColor(red: 0.067, green: 0.063, blue: 0.086, alpha: 1)
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .default()
-        configuration.applicationNameForUserAgent = "PRISM/0.13.0 (+https://prismdating.app)"
+        configuration.applicationNameForUserAgent = "PRISM/0.13.1 (+https://prismdating.app)"
         configuration.allowsInlineMediaPlayback = true
         configuration.mediaTypesRequiringUserActionForPlayback = []
         configuration.userContentController.addScriptMessageHandler(self, contentWorld: .page, name: "prism")
@@ -51,11 +54,13 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         webView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(webView)
+        standardBottom = webView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        liveBottom = webView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
         NSLayoutConstraint.activate([
             webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            webView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            standardBottom
         ])
         purchaseObserver = Task { [weak self] in
             for await update in StoreKit.Transaction.updates {
@@ -93,7 +98,19 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         webRoot = url.deletingLastPathComponent().path + "/"
         webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
     }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if webView?.url?.path == "/static/live/index.html" {
+            webView.evaluateJavaScript("window.prismLiveViewport140&&window.prismLiveViewport140(\(webView.bounds.height))",completionHandler:nil)
+        }
+    }
+    private func liveLayout(_ enabled: Bool) {
+        standardBottom.isActive = false; liveBottom.isActive = false
+        if enabled { liveBottom.isActive = true } else { standardBottom.isActive = true }
+        view.layoutIfNeeded()
+    }
     @objc private func keyboardFrame127(_ notification: Notification) {
+        if webView.url?.path == "/static/live/index.html" { return }
         guard let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
         let local = webView.convert(frame, from: nil)
         let intersection = webView.bounds.intersection(local)
@@ -131,10 +148,10 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         case "liveOpen":
             guard let room = body["room"] as? String, UUID(uuidString:room) != nil, let url = URL(string:"https://api.prismdating.app/static/live/index.html?room=\(room)") else { replyHandler(["status":422,"data":["detail":"Diretta non valida"]],nil); return }
             replyHandler(["status":200,"data":[:]],nil)
-            DispatchQueue.main.asyncAfter(deadline:.now()+0.1) { self.webView.load(URLRequest(url:url)) }
+            DispatchQueue.main.asyncAfter(deadline:.now()+0.1) { self.liveLayout(true); self.webView.load(URLRequest(url:url)) }
         case "liveClose":
             replyHandler(["status":200,"data":[:]],nil)
-            DispatchQueue.main.asyncAfter(deadline:.now()+0.1) { if let url = Bundle.main.url(forResource:"index",withExtension:"html",subdirectory:"Web") { self.webView.loadFileURL(url,allowingReadAccessTo:url.deletingLastPathComponent()) } }
+            DispatchQueue.main.asyncAfter(deadline:.now()+0.1) { self.liveLayout(false); if let url = Bundle.main.url(forResource:"index",withExtension:"html",subdirectory:"Web") { self.webView.loadFileURL(url,allowingReadAccessTo:url.deletingLastPathComponent()) } }
         case "pushInfo": pushInfo(replyHandler)
         case "pushEnable":
             UNUserNotificationCenter.current().requestAuthorization(options:[.alert,.sound,.badge]) { [weak self] granted,_ in
@@ -240,7 +257,7 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         let reply = locationReply; locationReply = nil
         reply?(["status": 0, "data": ["detail": error]], nil)
     }
-    @objc private func pause() { inBackground = true; updateProtection(); if recorder != nil { finishRecording(send: false); result(error: "Registrazione annullata in background.") }; webView.evaluateJavaScript("window.prismForeground=false;window.prismLivePause&&window.prismLivePause()", completionHandler: nil) }
+    @objc private func pause() { if livePermissionBusy { return }; inBackground = true; updateProtection(); if recorder != nil { finishRecording(send: false); result(error: "Registrazione annullata in background.") }; webView.evaluateJavaScript("window.prismForeground=false;window.prismLivePause&&window.prismLivePause()", completionHandler: nil) }
     @objc private func resume() { inBackground = false; updateProtection(); webView.evaluateJavaScript("window.prismForeground=true;window.prismResume&&window.prismResume()", completionHandler: nil) }
     override func viewDidAppear(_ animated: Bool) { super.viewDidAppear(animated); updateProtection() }
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) { updateProtection() }
@@ -253,7 +270,25 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
     }
     func webView(_ webView: WKWebView, requestMediaCapturePermissionFor origin: WKSecurityOrigin, initiatedByFrame frame: WKFrameInfo, type: WKMediaCaptureType, decisionHandler: @escaping (WKPermissionDecision) -> Void) {
         guard origin.protocol == "https", origin.host == "api.prismdating.app", frame.isMainFrame, webView.url?.path == "/static/live/index.html" else { decisionHandler(.deny); return }
-        decisionHandler(.prompt)
+        livePermissionBusy = true
+        let devices: [AVMediaType] = type == .camera ? [.video] : type == .microphone ? [.audio] : [.video, .audio]
+        func authorize(_ index: Int, _ allowed: Bool) {
+            if index == devices.count {
+                DispatchQueue.main.async {
+                    self.livePermissionBusy = false
+                    let active = self.webView.url?.path == "/static/live/index.html" && !self.inBackground
+                    decisionHandler(allowed && active ? .grant : .deny)
+                }
+                return
+            }
+            let device = devices[index]
+            switch AVCaptureDevice.authorizationStatus(for: device) {
+            case .authorized: authorize(index+1, allowed)
+            case .notDetermined: AVCaptureDevice.requestAccess(for: device) { ok in authorize(index+1, allowed && ok) }
+            default: authorize(index+1, false)
+            }
+        }
+        authorize(0, true)
     }
     func webView(_ webView: WKWebView, contextMenuConfigurationFor elementInfo: WKContextMenuElementInfo, completionHandler: @escaping (UIContextMenuConfiguration?) -> Void) { completionHandler(nil) }
     func webView(_ webView: WKWebView, decidePolicyFor action: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {

@@ -17,6 +17,6 @@ auth=function(mode='login'){
  <p id="autherror" class="error133" role="alert" aria-live="polite"></p><button id="authsubmit95" class="submit133" type="submit"><span>${reg?'Crea il mio profilo':'Accedi'}</span>${icon('chevron')}</button></form>
  ${reg?'':'<button class="verify133" onclick="helpAuth132(true)">Inserisci il codice di verifica</button>'}</section>
  <div class="authswitch133"><p>${reg?'Sei già dei nostri?':'Non hai ancora un account?'}</p><button class="glass133" onclick="auth('${reg?'login':'register'}')">${reg?'Accedi':'Crea account'} ${icon('chevron')}</button></div>
- <footer class="authfooter133">${icon('lock')}<span>Verifica email · PRISM 0.13.0</span></footer></main>`;
+ <footer class="authfooter133">${icon('lock')}<span>Verifica email · PRISM 0.13.1</span></footer></main>`;
 };
 if(!window.signedIn&&(document.querySelector('.auth132')||document.querySelector('.auth95')))auth('login');
