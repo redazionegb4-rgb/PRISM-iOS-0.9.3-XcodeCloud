@@ -1,0 +1,20 @@
+/* World picker owns the viewport; navigation returns automatically on close. */
+html body:has(.cities138) #nav,
+html body:has(.cities138)>header{display:none!important;pointer-events:none!important}
+html body.prismglass134 .overlay.cities138{
+ z-index:80!important;inset:0!important;padding:0!important;
+ padding-top:env(safe-area-inset-top,0px)!important;
+ overflow:hidden!important;box-sizing:border-box;background:#090c10!important;
+}
+html body.prismglass134 .cities138 .cityshell138{height:100%;min-height:0;overflow:hidden}
+html body.prismglass134 .cities138 .cityshell138>.toolbar98{flex-shrink:0}
+html body.prismglass134 .cities138 .citycontent138{
+ flex:1 1 0;min-height:0;overflow-y:auto!important;
+ padding-bottom:24px!important;-webkit-overflow-scrolling:touch;
+ overscroll-behavior-y:contain;scroll-padding-bottom:24px;
+}
+html body.prismglass134 .cities138 .cityfooter138{
+ position:relative;z-index:2;flex:0 0 auto;
+ padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px))!important;
+ background:#141922!important;
+}
