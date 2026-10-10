@@ -1,0 +1,15 @@
+/* PRISM: contour, golden fill, facets, light. Launch only. */
+html body .prismboot{background:#090b0e!important;gap:20px;transition:opacity .24s ease}
+.prismboot .bootmark161{width:150px;height:150px;overflow:visible;filter:drop-shadow(0 8px 22px #e7ad3920)}
+.bootoutline161{stroke-dasharray:1;stroke-dashoffset:1;animation:bootdraw161 .72s cubic-bezier(.4,0,.2,1) both,bootoutlinefade161 .28s 1.1s both}
+.bootfill161{transform:scaleY(0);transform-box:fill-box;transform-origin:bottom;animation:bootfill161 .62s .58s cubic-bezier(.2,.7,.2,1) forwards}
+.bootfacets161{opacity:0;animation:bootfacets161 .32s .95s forwards}
+.bootsheen161{animation:bootsheen161 .42s 1.18s both}
+.prismboot strong,.prismboot small{animation:bootwords161 .5s .35s both}
+@keyframes bootdraw161{to{stroke-dashoffset:0}}
+@keyframes bootoutlinefade161{to{opacity:0}}
+@keyframes bootfill161{to{transform:scaleY(1)}}
+@keyframes bootfacets161{to{opacity:1}}
+@keyframes bootsheen161{from{translate:0 0}to{translate:170px 0}}
+@keyframes bootwords161{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.prismboot .bootmark161 *,.prismboot strong,.prismboot small{animation:none!important}.bootfill161{transform:scaleY(1)}.bootfacets161{opacity:1}.bootoutline161,.bootsheen161{opacity:0}}
