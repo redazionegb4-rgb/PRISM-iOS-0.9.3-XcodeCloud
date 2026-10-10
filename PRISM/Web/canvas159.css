@@ -12,3 +12,7 @@ html body.prismglass134 .liveshell139{background:#090b0e!important}
 html body.prismglass134 .chat126 .conversationhead .chatoptions126{background:linear-gradient(140deg,#252a34fa,#151a23fa)!important;border:1px solid #ffffff20!important;box-shadow:0 16px 40px #0008!important;border-radius:20px}
 
 html body.prismglass134 .overlay .toolbar98{background:#090b0e!important;border-color:transparent!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+
+/* 0.14.8: the distance sheet is one surface, including its header/footer. */
+html body.prismglass134 .range121 .rangesheet121,html body.prismglass134 .range121 .rangesheet121 .toolbar98,html body.prismglass134 .range121 .rangesheet121 .rangecontent121,html body.prismglass134 .range121 .rangesheet121 .rangefooter121{background:#11161f!important;border-color:transparent!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html body.prismglass134 .range121 .rangesheet121{border:1px solid #ffffff20!important;border-radius:27px 27px 0 0;box-shadow:0 -16px 60px #0006!important}
