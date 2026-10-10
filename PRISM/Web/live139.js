@@ -6,7 +6,38 @@ const reset139=resetOnline;resetOnline=function(){lastAuto139=0;liveRequest139++
 // Background refreshes must not replace the grid while the finger is scrolling.
 let touching139=false,deferNear139=false,queuedNear139=false;
 const nearRender139=renderNearby100;renderNearby100=function(){if(deferNear139){queuedNear139=true;return;}nearRender139()};
-function flushNear139(){if(!queuedNear139||touching139||tab!=='near'||document.querySelector('.overlay'))return;queuedNear139=false;const y=window.scrollY;renderNearby100();polishOnline();window.scrollTo(0,y)}
+// Keep existing DOM nodes (especially images) during automatic refreshes.
+function patchNode148(current,next){
+ if(current.nodeType!==next.nodeType||current.nodeName!==next.nodeName){current.replaceWith(next);return next;}
+ if(current.nodeType!==1){if(current.nodeValue!==next.nodeValue)current.nodeValue=next.nodeValue;return current;}
+ for(const a of [...current.attributes])if(!next.hasAttribute(a.name))current.removeAttribute(a.name);
+ for(const a of next.attributes)if(current.getAttribute(a.name)!==a.value)current.setAttribute(a.name,a.value);
+ const keyed=new Map([...current.children].filter(n=>n.hasAttribute('onclick')).map(n=>[n.getAttribute('onclick'),n]));
+ let cursor=current.firstChild;
+ for(const wanted of [...next.childNodes]){
+  let node=wanted.nodeType===1&&wanted.hasAttribute('onclick')?keyed.get(wanted.getAttribute('onclick')):cursor;
+  if(node&&wanted.nodeType===1&&wanted.hasAttribute('onclick')&&!keyed.has(wanted.getAttribute('onclick')))node=null;
+  if(node&&node.nodeType===1&&node.hasAttribute('onclick')&&node.getAttribute('onclick')!==wanted.getAttribute?.('onclick'))node=null;
+  if(!node){node=wanted;current.insertBefore(node,cursor);}else{if(node!==cursor)current.insertBefore(node,cursor);node=patchNode148(node,wanted);}
+  cursor=node.nextSibling;
+ }
+ while(cursor){const next=cursor.nextSibling;cursor.remove();cursor=next;}
+ return current;
+}
+function silentNear148(){
+ const home=document.querySelector('.home121');if(!home)return;
+ const list=people.filter(p=>!p.locked&&!state.blocked.includes(p.id)&&(filter==='Preferiti'?state.favorites.includes(p.id):O.near.has(p.id)&&(!!exploreCity137||p.distanceHidden||p.distance<=(state.radiusKm||5)*1000)&&(filter!=='Online'||p.online)));
+ const main=document.querySelector('#app'),anchor=[...home.querySelectorAll('.grid>.card')].find(n=>n.getBoundingClientRect().bottom>home.getBoundingClientRect().top),top=anchor?.getBoundingClientRect().top;
+ let grid=home.querySelector('.grid');if(!grid){grid=document.createElement('div');grid.className='grid';home.querySelector('.homeresults121').after(grid);}
+ const template=document.createElement('template');template.innerHTML='<div class="grid">'+list.map(p=>exploreCity137&&filter!=='Preferiti'?cityCard137(p):nearbyCard100(p)).join('')+'</div>';
+ if(grid.innerHTML!==template.content.firstElementChild.innerHTML)patchNode148(grid,template.content.firstElementChild);
+ let empty=home.querySelector('.homeempty121');if(list.length)empty?.remove();else if(!empty){empty=document.createElement('section');empty.className='homeempty121';empty.innerHTML='<span>'+icon(filter==='Preferiti'?'star':'compass')+'</span><h2>'+ (filter==='Preferiti'?'Le persone da ritrovare.':filter==='Online'?'Nessuno online qui, ora.':'Ancora nessun profilo qui.')+'</h2><p>'+ (filter==='Preferiti'?'Salva i profili con la stellina: li ritrovi qui, ovunque siano.':'Prova un altro filtro o modifica la distanza di ricerca.')+'</p><button class="primary" onclick="'+(filter==='Online'?"filter=\'Tutti\';show(\'near\')":'filters()')+'">'+(filter==='Online'?'Mostra tutti':'Modifica distanza')+'</button>';grid.after(empty);}
+ const stories=home.querySelector('.stories');template.innerHTML=storyStrip();const next=template.content.firstElementChild;if(stories&&next&&stories.innerHTML!==next.innerHTML)patchNode148(stories,next);
+ const hint=home.querySelector('.nearhint100');if(hint&&updatedAt100)hint.textContent='Aggiornato alle '+new Date(updatedAt100).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+ if(anchor?.isConnected&&top!==undefined){const delta=anchor.getBoundingClientRect().top-top;if(delta){if(document.body.classList.contains('androidscroll122'))main.scrollTop+=delta;else window.scrollBy(0,delta);}}
+ decorateExtra137();
+}
+function flushNear139(){if(!queuedNear139||touching139||tab!=='near'||document.querySelector('.overlay'))return;queuedNear139=false;silentNear148()}
 document.addEventListener('touchend',()=>setTimeout(flushNear139,120),{passive:true});
 document.addEventListener('touchstart',()=>touching139=true,{passive:true});document.addEventListener('touchend',()=>touching139=false,{passive:true});document.addEventListener('touchcancel',()=>touching139=false,{passive:true});
 async function autoRefresh139(force=false){if(autoBusy139||refreshBusy9||!window.signedIn||!O.me||O.me.latitude==null||tab!=='near'||document.hidden||window.prismForeground===false||document.querySelector('.overlay')||touching139||(!force&&Date.now()-lastAuto139<60000))return;autoBusy139=true;deferNear139=true;const epoch=O.epoch;try{await nearbyOnline();if(epoch!==O.epoch)return;await storiesOnline();if(epoch!==O.epoch)return;lastAuto139=Date.now();updatedAt100=lastAuto139;queuedNear139=true}catch(e){O.syncError=e.message;lastAuto139=Date.now()}finally{autoBusy139=false;deferNear139=false;flushNear139()}}

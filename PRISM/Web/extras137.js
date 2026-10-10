@@ -24,7 +24,7 @@ nearbyOnline=async function(mode='all'){
  const data=await remote('GET','/v1/nearby?radius_km='+state.radiusKm+'&mode='+encodeURIComponent(mode)+'&limit=60'+(city?'&city_id='+encodeURIComponent(city):''));
  if(epoch!==O.epoch||city!==(extra101()?exploreCity137?.id||null:null)||request!==exploreRequest137)return;
  if(mode==='all')O.near.clear();for(const row of data.profiles||[]){if(revision!==O.revision)delete row.favorite;const id=person(row);if(id!==null){people[id].exploreDistance137=city?row.explore_distance_m:null;people[id].exploreCity137=city;O.near.add(id)}}
- if(!document.querySelector('.overlay')&&(tab==='near'||tab==='likes')){showOriginalOnline(tab);polishOnline();decorateExtra137()}
+ if(!(typeof autoBusy139!=='undefined'&&autoBusy139)&&!document.querySelector('.overlay')&&(tab==='near'||tab==='likes')){showOriginalOnline(tab);polishOnline();decorateExtra137()}
 };
 const refreshBase137=refresh9;refresh9=async function(){if(!exploreCity137||!extra101())return refreshBase137();if(refreshBusy9||!window.signedIn)return;refreshBusy9=true;try{await nearbyOnline();await storiesOnline();updatedAt100=Date.now();refreshSoundOnline();toast('Profili della città aggiornati')}catch(e){toast(e.message)}finally{refreshBusy9=false;resetPull100();if(tab==='near'&&!document.querySelector('.overlay'))renderNearby100()}};
 const radiusBase137=applyRadius100;applyRadius100=async function(){if(!exploreCity137)return radiusBase137();state.radiusKm=Math.min(radiusLimit101(),Number(document.querySelector('#radiusinput').value));closeOverlay();show('near');try{await nearbyOnline();await storiesOnline()}catch(e){toast(e.message)}};
