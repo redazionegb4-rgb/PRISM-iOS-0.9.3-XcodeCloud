@@ -1,5 +1,3 @@
-Versione aggiornata: app 0.13.5 / backend 0.3.23. Leggi RELEASE-0.13.5.md per avvisi e manutenzione.
-
 Versione aggiornata: app 0.13.4 / backend 0.3.22. Leggi RELEASE-0.13.4.md per questo aggiornamento delle storie.
 
 # Versione attuale: PRISM 0.13.3 / backend 0.3.18
