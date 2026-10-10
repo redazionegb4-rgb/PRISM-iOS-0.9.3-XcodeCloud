@@ -101,7 +101,7 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if webView?.url?.path == "/static/live/index.html" {
+        if ["/static/live/index.html", "/static/live/call.html"].contains(webView?.url?.path ?? "") {
             webView.evaluateJavaScript("window.prismLiveViewport140&&window.prismLiveViewport140(\(webView.bounds.height))",completionHandler:nil)
         }
     }
@@ -111,7 +111,7 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         view.layoutIfNeeded()
     }
     @objc private func keyboardFrame127(_ notification: Notification) {
-        if webView.url?.path == "/static/live/index.html" { return }
+        if ["/static/live/index.html", "/static/live/call.html"].contains(webView.url?.path ?? "") { return }
         guard let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
         let local = webView.convert(frame, from: nil)
         let intersection = webView.bounds.intersection(local)
@@ -144,12 +144,12 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
     private func clearToken() { SecItemDelete(tokenQuery() as CFDictionary); UserDefaults.standard.removeObject(forKey:"prismPushPending"); UNUserNotificationCenter.current().removeAllDeliveredNotifications(); UNUserNotificationCenter.current().setBadgeCount(0) }
     func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage, replyHandler: @escaping (Any?, String?) -> Void) {
         guard message.frameInfo.isMainFrame, let origin = message.frameInfo.request.url,
-              ((origin.isFileURL && origin.path.hasPrefix(webRoot)) || (origin.scheme == "https" && origin.host == "api.prismdating.app" && origin.path == "/static/live/index.html")), let body = message.body as? [String: Any], let action = body["action"] as? String else { replyHandler(nil, "Richiesta non valida"); return }
+              ((origin.isFileURL && origin.path.hasPrefix(webRoot)) || (origin.scheme == "https" && origin.host == "api.prismdating.app" && ["/static/live/index.html", "/static/live/call.html"].contains(origin.path))), let body = message.body as? [String: Any], let action = body["action"] as? String else { replyHandler(nil, "Richiesta non valida"); return }
         switch action {
         case "liveOpen", "callOpen":
             guard let room = body["room"] as? String, UUID(uuidString:room) != nil, let url = URL(string:"https://api.prismdating.app/static/live/index.html?room=\(room)") else { replyHandler(["status":422,"data":["detail":"Diretta non valida"]],nil); return }
             replyHandler(["status":200,"data":[:]],nil)
-            DispatchQueue.main.asyncAfter(deadline:.now()+0.1) { self.liveLayout(true); self.webView.load(URLRequest(url: action == "callOpen" ? URL(string:url.absoluteString+"&kind=call")! : url)) }
+            DispatchQueue.main.asyncAfter(deadline:.now()+0.1) { self.liveLayout(true); self.webView.load(URLRequest(url: action == "callOpen" ? URL(string:"https://api.prismdating.app/static/live/call.html?room=\(room)&v=156")! : url, cachePolicy: .reloadIgnoringLocalCacheData)) }
         case "liveClose":
             replyHandler(["status":200,"data":[:]],nil)
             DispatchQueue.main.asyncAfter(deadline:.now()+0.1) { self.liveLayout(false); if let url = Bundle.main.url(forResource:"index",withExtension:"html",subdirectory:"Web") { self.webView.loadFileURL(url,allowingReadAccessTo:url.deletingLastPathComponent()) } }
@@ -271,14 +271,14 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         webView.evaluateJavaScript("window.prismCaptureChanged&&window.prismCaptureChanged(\(captured ? "true" : "false"))",completionHandler:nil)
     }
     func webView(_ webView: WKWebView, requestMediaCapturePermissionFor origin: WKSecurityOrigin, initiatedByFrame frame: WKFrameInfo, type: WKMediaCaptureType, decisionHandler: @escaping (WKPermissionDecision) -> Void) {
-        guard origin.protocol == "https", origin.host == "api.prismdating.app", frame.isMainFrame, webView.url?.path == "/static/live/index.html" else { decisionHandler(.deny); return }
+        guard origin.protocol == "https", origin.host == "api.prismdating.app", frame.isMainFrame, ["/static/live/index.html", "/static/live/call.html"].contains(webView.url?.path ?? "") else { decisionHandler(.deny); return }
         livePermissionBusy = true
         let devices: [AVMediaType] = type == .camera ? [.video] : type == .microphone ? [.audio] : [.video, .audio]
         func authorize(_ index: Int, _ allowed: Bool) {
             if index == devices.count {
                 DispatchQueue.main.async {
                     self.livePermissionBusy = false
-                    let active = self.webView.url?.path == "/static/live/index.html" && !self.inBackground
+                    let active = ["/static/live/index.html", "/static/live/call.html"].contains(self.webView.url?.path ?? "") && !self.inBackground
                     decisionHandler(allowed && active ? .grant : .deny)
                 }
                 return
@@ -296,7 +296,7 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
     func webView(_ webView: WKWebView, decidePolicyFor action: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         let url = action.request.url
         let local = url?.isFileURL == true && url?.path.hasPrefix(webRoot) == true
-        let live = url?.scheme == "https" && url?.host == "api.prismdating.app" && url?.path == "/static/live/index.html"
+        let live = url?.scheme == "https" && url?.host == "api.prismdating.app" && ["/static/live/index.html", "/static/live/call.html"].contains(url?.path ?? "")
         decisionHandler(local || live ? .allow : .cancel)
     }
     private func literal(_ value: String) -> String {
