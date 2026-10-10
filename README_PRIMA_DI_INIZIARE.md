@@ -1,3 +1,5 @@
+Versione attuale: app 0.14.0 / backend 0.3.24. Leggi RELEASE-0.14.0.md.
+
 Versione attuale: 0.13.6. Leggi RELEASE-0.13.6.md per il refresh silenzioso.
 
 Versione aggiornata: app 0.13.5 / backend 0.3.23. Leggi RELEASE-0.13.5.md per avvisi e manutenzione.
