@@ -39,6 +39,7 @@ final class PrismSceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
         let window = UIWindow(windowScene: windowScene)
         window.overrideUserInterfaceStyle = .dark
+        window.backgroundColor = UIColor(red: 9.0/255, green: 11.0/255, blue: 14.0/255, alpha: 1)
         window.rootViewController = PrismViewController()
         self.window = window
         window.makeKeyAndVisible()

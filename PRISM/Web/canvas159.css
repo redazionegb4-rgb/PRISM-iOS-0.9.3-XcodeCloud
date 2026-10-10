@@ -1,0 +1,14 @@
+/* PRISM 0.14.7 — continuous canvas, glass reserved for controls/cards. */
+html,body,.prismboot{background:#090b0e!important}
+.prismboot small{color:#969daa}.prismboot .bootline{background:#ffffff12}
+html body.prismglass134 #app{background:#090b0e!important}
+html body.prismglass134 .overlay:not(.storyviewer):not(.mediafull):not(.albumviewer10):not(.photoviewer10):not(.range121):not(.chatpage):not(.public99){background:#090b0e!important}
+html body.prismglass134 :is(.toolbar98,.albumhead10,.albumfooter10,.sharebottom11,.homefilterbar121){background:#090b0e!important;border-color:transparent!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html body.prismglass134 .chatpage.chat126,html body.prismglass134 .chat126 .chatbody{background:#090b0e!important}
+html body.prismglass134 .chat126 :is(.conversationhead,.chatcomposer){background:#090b0e!important;border-color:transparent!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html body.prismglass134 :is(.pagebody98,.plan118,.support118,.privacy100,.editor98,.albumedit98,.liveshell139,.livecontent139){background:transparent!important}
+html body.prismglass134 .liveshell139{background:#090b0e!important}
+/* Preserve the foreground menu layer; remove only full-width rectangular bands. */
+html body.prismglass134 .chat126 .conversationhead .chatoptions126{background:linear-gradient(140deg,#252a34fa,#151a23fa)!important;border:1px solid #ffffff20!important;box-shadow:0 16px 40px #0008!important;border-radius:20px}
+
+html body.prismglass134 .overlay .toolbar98{background:#090b0e!important;border-color:transparent!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
