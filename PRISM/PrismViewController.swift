@@ -93,6 +93,7 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrame127(_:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(interrupted), name: AVAudioSession.interruptionNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(pause), name: UIScene.willDeactivateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(callBackground153), name: UIScene.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(resume), name: UIScene.didActivateNotification, object: nil)
         guard let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "Web") else { return }
         webRoot = url.deletingLastPathComponent().path + "/"
@@ -145,10 +146,10 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         guard message.frameInfo.isMainFrame, let origin = message.frameInfo.request.url,
               ((origin.isFileURL && origin.path.hasPrefix(webRoot)) || (origin.scheme == "https" && origin.host == "api.prismdating.app" && origin.path == "/static/live/index.html")), let body = message.body as? [String: Any], let action = body["action"] as? String else { replyHandler(nil, "Richiesta non valida"); return }
         switch action {
-        case "liveOpen":
+        case "liveOpen", "callOpen":
             guard let room = body["room"] as? String, UUID(uuidString:room) != nil, let url = URL(string:"https://api.prismdating.app/static/live/index.html?room=\(room)") else { replyHandler(["status":422,"data":["detail":"Diretta non valida"]],nil); return }
             replyHandler(["status":200,"data":[:]],nil)
-            DispatchQueue.main.asyncAfter(deadline:.now()+0.1) { self.liveLayout(true); self.webView.load(URLRequest(url:url)) }
+            DispatchQueue.main.asyncAfter(deadline:.now()+0.1) { self.liveLayout(true); self.webView.load(URLRequest(url: action == "callOpen" ? URL(string:url.absoluteString+"&kind=call")! : url)) }
         case "liveClose":
             replyHandler(["status":200,"data":[:]],nil)
             DispatchQueue.main.asyncAfter(deadline:.now()+0.1) { self.liveLayout(false); if let url = Bundle.main.url(forResource:"index",withExtension:"html",subdirectory:"Web") { self.webView.loadFileURL(url,allowingReadAccessTo:url.deletingLastPathComponent()) } }
@@ -257,7 +258,8 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
         let reply = locationReply; locationReply = nil
         reply?(["status": 0, "data": ["detail": error]], nil)
     }
-    @objc private func pause() { if livePermissionBusy { return }; inBackground = true; updateProtection(); if recorder != nil { finishRecording(send: false); result(error: "Registrazione annullata in background.") }; webView.evaluateJavaScript("window.prismForeground=false;window.prismLivePause&&window.prismLivePause()", completionHandler: nil) }
+    @objc private func pause() { if livePermissionBusy { return }; inBackground = true; updateProtection(); if recorder != nil { finishRecording(send: false); result(error: "Registrazione annullata in background.") }; webView.evaluateJavaScript("window.prismForeground=false", completionHandler: nil) }
+    @objc private func callBackground153() { webView.evaluateJavaScript("window.prismLivePause&&window.prismLivePause()",completionHandler:nil) }
     @objc private func resume() { inBackground = false; updateProtection(); webView.evaluateJavaScript("window.prismForeground=true;window.prismResume&&window.prismResume()", completionHandler: nil) }
     override func viewDidAppear(_ animated: Bool) { super.viewDidAppear(animated); updateProtection() }
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) { updateProtection() }
