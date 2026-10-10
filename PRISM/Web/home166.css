@@ -1,0 +1,9 @@
+/* Single photographic surface; generous touch targets. */
+html body.prismglass134:has(.home121) #nav button.selected:has(.brandnav95)>span,html body.prismglass134 #nav button.selected:has(.brandnav95)>span{background:radial-gradient(ellipse at center,#ffda7830,#ffda7808 65%,transparent)!important;border:1px solid #ffda7840!important;box-shadow:inset 0 1px 1px #fff2,0 0 17px #ffda781b!important;border-radius:17px!important}
+html body.prismglass134 .home121 .homecard163{border-radius:19px!important;aspect-ratio:.76;box-shadow:0 8px 22px #0006,inset 0 1px 0 #ffffff20!important}
+html body.prismglass134 .home121 .caption{inset:auto 0 0!important;border:0!important;border-radius:0!important;padding:36px 48px 13px 12px!important;background:linear-gradient(transparent,#080d14b0 38%,#080d14ed)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:none!important;pointer-events:none}
+html body.prismglass134 .home121 .caption b{font-size:14px!important;text-shadow:0 1px 3px #0008}
+html body.prismglass134 .homecard163 .favorite163{right:3px!important;bottom:5px!important;width:44px!important;height:44px!important;touch-action:manipulation;pointer-events:auto!important;border-radius:50%;filter:drop-shadow(0 2px 3px #0008)}
+html body.prismglass134 .homecard163 .favorite163 svg{width:23px!important;height:23px!important;pointer-events:none}
+html body.prismglass134 .homecard163 .favorite163:active{background:#ffffff20!important}
+@media(min-width:480px){html body.prismglass134 .home121 .grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}

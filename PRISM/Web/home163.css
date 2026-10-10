@@ -1,0 +1,38 @@
+/* Match the left phone, without an intermediate controls row. */
+html body.prismglass134 .home121{padding:8px 12px 92px!important;max-width:760px}
+html body.prismglass134 .homebrand121{padding:5px 2px 11px;min-height:48px;gap:0}
+html body.prismglass134 .homebrand121 h1{font-size:29px!important;letter-spacing:-1px;font-weight:650}
+html body.prismglass134 .homebrand121 .location121{width:36px;min-width:36px;height:36px;padding:7px;border:0!important;background:none!important;box-shadow:none!important;border-radius:0;color:#c8cdd5!important}
+html body.prismglass134 .homebrand121 .location121 svg{width:21px;height:21px;color:#c8cdd5}
+html body.prismglass134 .homebrand121 .ghost137,html body.prismglass134 .homefilterbar121,html body.prismglass134 .homesection121,html body.prismglass134 .homeresults121,html body.prismglass134 .nearhint100,html body.prismglass134 .discreethint137{display:none!important}
+html body.prismglass134 .homestories121{margin:0 0 7px;padding:0;border:0!important}
+html body.prismglass134 .home121 .stories{margin:0 -12px;padding:0 12px 9px;gap:12px}
+html body.prismglass134 .home121 .story{min-width:58px;max-width:58px;width:58px;line-height:1.15;font-size:10px}
+html body.prismglass134 .home121 .ring{width:58px;height:58px;padding:1.5px;margin-bottom:5px}
+html body.prismglass134 .home121 .ring:not(.blank):not(.seen96){background:#e8bd60!important}
+html body.prismglass134 .home121 .ring.blank{display:grid;place-items:center;background:none!important;border:1.5px solid #e8bd60;padding:0}
+html body.prismglass134 .home121 .ring.blank svg{width:25px;height:25px;color:#e8bd60}
+html body.prismglass134 .home121 .grid{gap:8px!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+html body.prismglass134 .home121 .homecard163{border:0!important;border-radius:7px!important;aspect-ratio:.72;background:#171b22;box-shadow:none!important}
+.homecard163 .profile163{display:block;width:100%;height:100%;padding:0;border:0;background:none;border-radius:inherit;overflow:hidden;text-align:left;position:absolute;inset:0}
+.homecard163 .profile163>img{display:block;width:100%;height:100%;object-fit:cover}
+html body.prismglass134 .home121 .caption{padding:48px 37px 12px 10px;background:linear-gradient(transparent,#080a0ed9)!important}
+html body.prismglass134 .home121 .caption b{font-size:14px;font-weight:550;letter-spacing:-.2px;line-height:1.25}
+html body.prismglass134 .home121 .caption small{font-size:10px;margin-top:4px}
+.homecard163 .favorite163{position:absolute;bottom:10px;right:7px;width:32px;height:34px;display:grid;place-items:center;background:none;border:0;padding:5px;z-index:3;color:#edf0f4;filter:drop-shadow(0 1px 3px #0008)}
+.homecard163 .favorite163 svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.6}
+.homecard163 .favorite163.saved163{color:#ffda78}.homecard163 .favorite163.saved163 svg{fill:currentColor}.homecard163 .favorite163:disabled{opacity:.5}
+html body.prismglass134:has(.home121) #nav{left:0;right:0;bottom:0;max-width:none;border-radius:0!important;border:0!important;border-top:1px solid #ffffff12!important;background:#101419ed!important;box-shadow:none!important;padding:6px 9px calc(7px + env(safe-area-inset-bottom,0px));backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+html body.prismglass134:has(.home121) #nav button{min-height:42px;height:42px;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important}
+html body.prismglass134:has(.home121) #nav button.selected{background:none!important;color:#ffda78!important}
+html body.prismglass134:has(.home121) #nav button.selected:after{bottom:0;left:36%;right:36%;height:2px}
+html body.prismglass134:has(.home121) #nav button svg{width:25px;height:25px}
+html body.prismglass134:has(.home121) #nav .brandnav95{width:35px;height:35px;border-radius:0;background:none}
+html body.prismglass134:has(.home121) #nav .navavatar9{width:29px;height:29px}
+.homeactions163{width:100%;max-width:540px;margin:auto;background:#11161f;border:1px solid #ffffff20;border-radius:25px 25px 0 0;overflow:auto;max-height:calc(100dvh - env(safe-area-inset-top) - 24px)}
+html body.prismglass134 .overlay.homeactions163{max-width:none;border:0;border-radius:0;background:#0009!important;display:flex;align-items:flex-end;padding:0!important}
+html body.prismglass134 .homeactions163 .toolbar98{background:#11161f!important;padding:20px;position:static;border:0}
+.homeactionbody163{padding:0 18px calc(20px + env(safe-area-inset-bottom,0px))}.homeactionbody163>button{width:100%;display:flex;align-items:center;gap:13px;background:none;text-align:left;padding:17px 4px;border:0;border-top:1px solid #ffffff10;color:#ffda78}.homeactionbody163>button>svg{width:22px;height:22px;flex:none}.homeactionbody163>button>span{flex:1}.homeactionbody163 b{display:block;font-size:14px;color:#f1f3f8;font-weight:550}.homeactionbody163 small{display:block;font-size:11px;color:#969fab;margin-top:4px}.homechoices163{display:flex;gap:5px;padding:4px;border:1px solid #ffffff19;border-radius:15px;margin-bottom:12px}.homechoices163 button{flex:1;min-width:0;border:0;background:none;color:#adb5c2;border-radius:11px;font-size:12px;padding:11px 4px}.homechoices163 button.active{background:#ffda78;color:#211b0b}
+@media(max-width:350px){html body.prismglass134 .home121{padding-left:10px!important;padding-right:10px!important}html body.prismglass134 .home121 .caption b{font-size:13px}html body.prismglass134 .home121 .caption{padding-left:8px}.homecard163 .favorite163{right:4px}}
+
+html body.prismglass134:has(.home121) #nav button>span{background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important}

@@ -1,0 +1,40 @@
+/* Product mockup layout: portrait tiles, compact stories and quiet chrome. */
+html body.prismglass134 .home121{padding:12px 16px 116px!important;max-width:760px;margin:auto;background:#090b0e!important}
+html body.prismglass134 .homebrand121{display:flex;align-items:center;gap:8px;padding:4px 0 14px;margin:0;border:0;min-height:60px}
+html body.prismglass134 .homebrand121 h1{font-size:32px!important;letter-spacing:-1.3px;line-height:1.1;margin:0 auto 0 0;font-weight:750}
+html body.prismglass134 .homebrand121 .location121{height:40px;min-height:40px;padding:0 10px;gap:7px;border-radius:13px;background:#ffffff05!important;border-color:#ffffff16!important;box-shadow:none!important;font-size:11px;flex:none}
+html body.prismglass134 .homebrand121 .location121 svg{width:18px;height:18px}
+html body.prismglass134 .homebrand121 .ghost137{width:40px;height:40px;min-width:40px;margin:0;border-radius:13px;flex:none;box-shadow:none!important;background:#ffffff05!important;border:1px solid #ffffff16!important}
+html body.prismglass134 .homebrand121 .ghost137 svg{width:21px;height:21px}
+html body.prismglass134 .homestories121{position:relative;border:0!important;padding:0;margin:0 0 7px}
+html body.prismglass134 .homesection121{justify-content:flex-end;height:18px;padding:0 2px}
+html body.prismglass134 .homesection121 h2{display:none}
+html body.prismglass134 .homesection121 button{font-size:10px;padding:0;line-height:18px}
+html body.prismglass134 .home121 .stories{margin:0 -16px;padding:6px 16px 9px;gap:14px;align-items:flex-start;background:none;border:0}
+html body.prismglass134 .home121 .story{min-width:58px;width:58px;max-width:58px;font-size:10px;line-height:1.2;padding:0;color:#bac0ca!important}
+html body.prismglass134 .home121 .ring{width:58px;height:58px;margin:0 0 6px;padding:2px}
+html body.prismglass134 .home121 .ring img{border-width:2px!important}
+html body.prismglass134 .home121 .plusbadge{top:37px;right:0;width:19px;height:19px;line-height:15px;font-size:15px}
+html body.prismglass134 .homefilterbar121{display:flex;align-items:center;gap:8px;padding:7px 0 12px;position:static;background:#090b0e!important;backdrop-filter:none;box-shadow:none}
+html body.prismglass134 .home121 .nearfilters100{flex:1;min-width:0;gap:0;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;border-radius:0;backdrop-filter:none}
+html body.prismglass134 .home121 .nearfilters100 button{min-height:35px;position:relative;font-size:11px;font-weight:550;border-radius:0;background:none!important;padding:8px 2px;color:#89929f!important;box-shadow:none!important;gap:4px}
+html body.prismglass134 .home121 .nearfilters100 button.active{color:#ffda78!important;background:none!important;box-shadow:none!important}
+html body.prismglass134 .home121 .nearfilters100 button.active:after{content:'';position:absolute;bottom:1px;left:28%;right:28%;height:2px;border-radius:3px;background:#ffda78}
+html body.prismglass134 .home121 .nearfilters100 svg{width:13px;height:13px}
+html body.prismglass134 .homefilterbar121 .liveentry139{height:35px;min-height:35px;flex:none;padding:6px 10px;gap:5px;border:1px solid #ffffff1c!important;border-radius:11px;background:#ffffff06!important;box-shadow:none!important;font-size:11px}
+html body.prismglass134 .homefilterbar121 .liveentry139 svg{width:17px;height:17px}
+html body.prismglass134 .homeresults121{display:none}
+html body.prismglass134 .home121 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px;margin:0;padding:0}
+html body.prismglass134 .home121 .card{position:relative;aspect-ratio:.72;width:100%;height:auto;min-width:0;padding:0;overflow:hidden;border:1px solid #ffffff15!important;border-radius:13px!important;background:#181c24;box-shadow:none!important;text-align:left}
+html body.prismglass134 .home121 .card>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+html body.prismglass134 .home121 .caption{position:absolute;inset:auto 0 0;padding:48px 12px 13px;background:linear-gradient(transparent,rgba(5,7,10,.82))!important;z-index:1;pointer-events:none}
+html body.prismglass134 .home121 .caption b{display:block;color:#f6f7fa;font-size:15px;font-weight:650;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.25px}
+html body.prismglass134 .home121 .caption small{font-size:11px;color:#c4cbd4!important;line-height:1.4;margin-top:3px}
+html body.prismglass134 .home121 .dot{width:6px;height:6px;margin-right:5px;box-shadow:0 0 7px #98e08135}
+html body.prismglass134 .home121 .star{top:9px;right:9px;width:27px;height:27px;padding:5px;border-radius:9px;background:#0a0d11a8!important;color:#ffda78;border:1px solid #ffffff25;z-index:2}
+html body.prismglass134:has(.home121) #nav{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));max-width:736px;margin:auto;padding:7px 8px;background:linear-gradient(130deg,#242a32ed,#11151bed)!important;border-radius:24px!important;border:1px solid #ffffff25!important;box-shadow:inset 0 1px 1px #ffffff20,0 12px 35px #0008!important}
+html body.prismglass134:has(.home121) #nav button{min-height:48px;border-radius:16px!important}
+html body.prismglass134:has(.home121) #nav button.selected{background:#ffd37109!important;box-shadow:none!important;border-color:transparent!important;position:relative}
+html body.prismglass134:has(.home121) #nav button.selected:after{content:'';position:absolute;bottom:1px;left:34%;right:34%;height:2px;background:#ffda78;border-radius:2px}
+html body.prismglass134 .home121 .nearhint100{font-size:9px;margin:17px 0 0;color:#737d8a}
+@media(max-width:350px){html body.prismglass134 .home121{padding-left:12px!important;padding-right:12px!important}.home121 .grid{gap:8px!important}html body.prismglass134 .home121 .caption{padding:40px 9px 10px}html body.prismglass134 .home121 .caption b{font-size:13px}html body.prismglass134 .homebrand121 h1{font-size:29px}html body.prismglass134 .homebrand121 .location121{padding:0 8px}}

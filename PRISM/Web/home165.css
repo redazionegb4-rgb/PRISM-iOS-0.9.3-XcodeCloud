@@ -1,0 +1,31 @@
+/* PRISM home: photographic tiles, quiet glass and precise icon alignment. */
+html body.prismglass134 .home121{padding-top:12px!important}
+html body.prismglass134 .homebrand121{padding-bottom:18px;gap:9px}
+html body.prismglass134 .homebrand121 h1{font-size:33px!important;letter-spacing:-1.3px;font-weight:720}
+html body.prismglass134 .homebrand121 .location121,html body.prismglass134 .homebrand121 .ghost137{border-radius:15px;background:linear-gradient(140deg,#ffffff12,#ffffff04)!important;box-shadow:inset 0 1px 0 #ffffff16,0 4px 14px #0002!important}
+html body.prismglass134 .homestories121{padding:12px 0 2px;border-radius:24px;border-color:#ffffff15!important;border-top-color:#ffffff30!important;background:linear-gradient(135deg,#1d253044,#0f141c55);box-shadow:inset 0 1px 0 #ffffff08,0 9px 24px #0002}
+html body.prismglass134 .homesection121{padding:0 14px 6px;height:25px}
+html body.prismglass134 .homesection121 h2{font-size:12px;font-weight:600;letter-spacing:.1px}
+html body.prismglass134 .home121 .stories{padding:8px 13px 13px;gap:14px}
+html body.prismglass134 .home121 .ring{width:60px;height:60px;box-shadow:0 3px 12px #0003}
+html body.prismglass134 .home121 .story{width:60px;max-width:60px;min-width:60px}
+html body.prismglass134 .homefilterbar121{gap:9px;padding:0 0 16px}
+html body.prismglass134 .home121 .nearfilters100{border-radius:18px;box-shadow:inset 0 1px 0 #ffffff0c,0 5px 18px #0002!important;padding:5px!important}
+html body.prismglass134 .home121 .nearfilters100 button{border-radius:13px;min-height:34px;font-weight:600}
+html body.prismglass134 .homefilterbar121 .liveentry139{height:46px;min-height:46px;border-radius:17px;background:linear-gradient(140deg,#29323fed,#161c26ed)!important;box-shadow:inset 0 1px 0 #ffffff19,0 5px 16px #0002!important}
+html body.prismglass134 .home121 .grid{gap:12px!important}
+html body.prismglass134 .home121 .homecard163{aspect-ratio:.74;border-radius:21px!important;border-color:#ffffff25!important;border-top-color:#ffffff38!important;box-shadow:inset 0 1px 0 #ffffff10,0 8px 23px #0004!important}
+html body.prismglass134 .homecard163 .profile163>img{transition:transform .2s ease;object-position:center}
+html body.prismglass134 .home121 .caption{inset:auto 8px 8px;border-radius:14px;border:1px solid #ffffff21;border-top-color:#ffffff32;padding:9px 35px 9px 10px;background:linear-gradient(125deg,#1d2633b8,#0d121dc7)!important;backdrop-filter:blur(14px) saturate(120%);-webkit-backdrop-filter:blur(14px) saturate(120%);box-shadow:inset 0 1px 0 #ffffff08,0 4px 14px #0002}
+html body.prismglass134 .home121 .caption b{font-size:14px;font-weight:650;line-height:1.3;letter-spacing:-.2px}
+html body.prismglass134 .home121 .caption small{font-size:10px;color:#c2ccd9!important;line-height:1.3;margin-top:4px}
+html body.prismglass134 .homecard163 .favorite163{position:absolute;bottom:17px;right:12px;width:30px;height:34px;padding:0!important;margin:0!important;display:block;border:0;background:none;box-shadow:none;filter:drop-shadow(0 1px 2px #0005);line-height:0;backdrop-filter:none;z-index:3}
+html body.prismglass134 .homecard163 .favorite163 svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)!important;width:21px;height:21px;margin:0!important;padding:0!important;display:block;stroke-width:1.7;overflow:visible}
+html body.prismglass134 #nav button:has(.brandnav95)>span{background:none!important;border:0!important;box-shadow:none!important}
+html body.prismglass134 #nav .brandnav95{width:36px;height:36px;object-fit:contain;background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+html body.prismglass134 #nav button:has(.brandnav95).selected{background:none!important;border:0!important;box-shadow:none!important}
+html body.prismglass134 .home121 .homeempty121{background:linear-gradient(135deg,#2631407a,#12182182)!important;border-radius:26px!important;border-top-color:#ffffff35!important}
+@media(max-width:350px){html body.prismglass134 .homebrand121 h1{font-size:29px!important}html body.prismglass134 .home121 .grid{gap:9px!important}html body.prismglass134 .home121 .caption{inset:auto 6px 6px;padding:8px 28px 8px 8px;border-radius:12px}html body.prismglass134 .home121 .caption b{font-size:12px}html body.prismglass134 .homecard163 .favorite163{right:8px;bottom:12px;width:28px;height:34px}html body.prismglass134 .homecard163 .favorite163 svg{width:19px;height:19px}}
+@media(prefers-reduced-motion:reduce){html body.prismglass134 .homecard163 .profile163>img{transition:none}}
+
+html body.prismglass134:has(.home121) #nav button.selected:has(.brandnav95)>span,html body.prismglass134 #nav button.selected:has(.brandnav95)>span{background:none!important;border:0!important;box-shadow:none!important}
