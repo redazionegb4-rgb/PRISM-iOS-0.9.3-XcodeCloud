@@ -36,7 +36,7 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
     override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(red: 0.067, green: 0.063, blue: 0.086, alpha: 1)
+        view.backgroundColor = UIColor(red: 9.0/255, green: 11.0/255, blue: 14.0/255, alpha: 1)
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .default()
         configuration.applicationNameForUserAgent = "PRISM/0.13.3 (+https://prismdating.app)"
