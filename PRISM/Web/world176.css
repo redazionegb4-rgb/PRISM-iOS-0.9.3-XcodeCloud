@@ -1,0 +1,25 @@
+/* One compact selection surface, not nested cards. */
+html body .cities138 .cityselection138{
+ padding:16px!important;margin:4px 0 16px!important;border-radius:22px!important;
+ background:linear-gradient(125deg,#ffd6750b,#151a22)!important;
+ border:1px solid #ffd67535!important;box-shadow:inset 0 1px 0 #ffffff0c!important;
+}
+html body .cities138 .cityselectedname138{gap:10px!important;align-items:center!important}
+html body .cities138 .cityselectedname138>span{display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;border-radius:13px;background:#ffd67512}
+html body .cities138 .cityselectedname138 small{font-size:9px!important;letter-spacing:.8px!important}
+html body .cities138 .cityselectedname138 h3{font-size:19px!important;margin:3px 0 0!important}
+html body .cities138 .cityselectedname138>button{width:36px!important;height:36px!important;border-radius:50%!important;flex:0 0 36px;background:#ffffff08!important}
+html body .cities138 .cityrange138{
+ margin-top:14px!important;padding:13px 0 0!important;gap:8px!important;
+ background:transparent!important;border:0!important;border-top:1px solid #ffffff12!important;
+ border-radius:0!important;box-shadow:none!important;
+}
+html body .cities138 .cityrange138 label{font-size:12px!important;color:#bcc2cc!important}
+html body .cities138 .cityrange138 b{font-size:12px!important;background:#ffd67512;padding:4px 9px;border-radius:9px;line-height:1.2}
+html body .cities138 .cityrange138 input{appearance:none;-webkit-appearance:none;width:100%;height:30px!important;cursor:pointer}
+html body .cities138 .cityrange138 input::-webkit-slider-runnable-track{height:5px;border-radius:4px;background:linear-gradient(to right,#ffd675 0 var(--range176,26%),#ffffff20 var(--range176,26%) 100%)}
+html body .cities138 .cityrange138 input::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:20px;height:20px;margin-top:-7.5px;background:#ffdc83;border:2px solid #fff0b2;border-radius:50%;box-shadow:0 2px 9px #0005}
+html body.prismglass134 .cities138 .cityfooter138{flex-direction:column!important;gap:7px!important;padding:10px 18px!important}
+html body .cities138 #cityconfirm138{flex:none!important;width:100%!important;min-height:49px!important}
+html body .cities138 .currentcity137{width:100%!important;min-height:38px!important;padding:8px 12px!important;flex:none!important;border:0!important;border-radius:15px!important;box-shadow:none!important;background:#ffffff06!important;font-size:12px!important;color:#c5cad3!important}
+html body .cities138 .currentcity137 svg{color:#ffdc83}

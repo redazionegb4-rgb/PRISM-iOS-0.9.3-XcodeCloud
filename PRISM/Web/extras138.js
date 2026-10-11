@@ -1,5 +1,5 @@
 "use strict";
-let cityDraft138=null,cityRadius138=5,cityRegion138='all',cityRecent138=[],cityLoading138=false,cityError138='',cityRun138=0;
+let cityDraft138=null,cityRadius138=40,cityRegion138='all',cityRecent138=[],cityLoading138=false,cityError138='',cityRun138=0;
 const cityReset138=resetOnline;resetOnline=function(){cityDraft138=null;cityRecent138=[];cityLoading138=false;cityError138='';cityRun138++;cityReset138()};
 const decorateBase138=decorateExtra137;decorateExtra137=function(){decorateBase138();const home=document.querySelector('.homebrand121'),km=home?.querySelector('.location121'),ghost=home?.querySelector('.ghost137');if(km&&ghost&&km.nextElementSibling!==ghost)km.after(ghost);
  const banner=document.querySelector('.citybanner137');if(banner&&exploreCity137&&banner.dataset.visual138!==banner.dataset.key137){banner.dataset.visual138=banner.dataset.key137;banner.innerHTML='<span>'+globe137()+'</span><div><small>STAI ESPLORANDO</small><b>'+esc(exploreCity137.name)+'</b><p>Entro '+state.radiusKm+' km dal centro</p></div><button class="citychange138" onclick="openCities137()" aria-label="Cambia città">'+icon('settings')+'</button><button class="cityreturn138" onclick="leaveCity137()" aria-label="Torna vicino a me">'+icon('location')+'</button>'}

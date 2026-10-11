@@ -1,0 +1,38 @@
+/* Keep navigation visible; each page reserves its actual floating-menu height. */
+:root{--nav-clearance173:calc(104px + env(safe-area-inset-bottom,0px))}
+html body:has(.overlay:is(.profilepage,.plan101,.cities138)) #nav{
+ display:flex!important;pointer-events:auto!important;z-index:90!important;
+}
+html body:has(.overlay:is(.profilepage,.plan101,.cities138))>header{display:none!important}
+html body .overlay.profilepage,
+html body .overlay.plan101,
+html body.prismglass134 .overlay.cities138{
+ z-index:80!important;
+ bottom:var(--nav-clearance173)!important;
+}
+html body .overlay.profilepage{padding-bottom:100px!important}
+html body .overlay.profilepage .profileactions{
+ position:fixed;left:0;right:0;bottom:var(--nav-clearance173)!important;
+ z-index:9;display:flex;gap:10px;padding:13px 17px 14px;pointer-events:auto;
+ border:1px solid #ffffff20;border-radius:22px 22px 0 0;
+}
+html body .overlay.profilepage .profileactions .primary{
+ flex:1;min-width:0;min-height:53px;
+}
+html body .overlay.profilepage .profileactions .tapaction{min-height:53px;flex:0 0 auto}
+html body.prismglass134 .cities138 .cityfooter138{padding:12px 20px 14px!important}
+html body .overlay.plan101{padding-bottom:24px!important;scroll-padding-bottom:24px}
+html body .chatpage .conversationhead .callbuttons149 button{
+ display:grid!important;place-items:center!important;
+ width:40px!important;height:40px!important;min-width:40px!important;
+ padding:0!important;line-height:0;box-sizing:border-box;flex:0 0 40px;
+}
+html body .chatpage .conversationhead .callbuttons149 button>svg{
+ display:block!important;width:22px!important;height:22px!important;
+ margin:0!important;flex:none;
+}
+@media(max-width:350px){
+ html body .chatpage .conversationhead .callbuttons149 button{
+  width:36px!important;height:36px!important;min-width:36px!important;flex-basis:36px;
+ }
+}

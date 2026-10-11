@@ -1,0 +1,22 @@
+html body.prismglass134 .profiletop .topgroup{display:flex!important;align-items:center!important;gap:8px!important}
+html body.prismglass134 .profiletop .topgroup>button,
+html body.prismglass134 .profiletop #publicfavorite99{
+ display:grid!important;place-items:center!important;width:44px!important;height:44px!important;
+ min-width:44px!important;min-height:44px!important;max-width:44px!important;max-height:44px!important;
+ padding:0!important;flex:0 0 44px!important;line-height:0!important;box-sizing:border-box;
+ border-radius:15px!important;transform:none!important;
+}
+html body.prismglass134 .profiletop .topgroup>button svg{width:23px!important;height:23px!important;display:block!important;margin:0!important;flex:none;pointer-events:none}
+.popup177{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:22px;background:#0009;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);overscroll-behavior:contain}
+.popupcard177{position:relative;width:min(100%,390px);max-height:calc(var(--popup-height177,100dvh) - 44px);overflow:auto;padding:30px 23px 22px;border:1px solid #ffffff25;border-top-color:#ffffff40;border-radius:27px;background:linear-gradient(145deg,#262b34f7,#11151cfb);box-shadow:0 24px 70px #0008;color:#f7f6fa;scrollbar-width:thin}
+.popupcard177 h1,.popupcard177 h2{font-size:23px;line-height:1.2;margin:8px 32px 14px 0;letter-spacing:-.5px}
+.popupcard177 p{font-size:13px;line-height:1.6;color:#bac1cd;margin:12px 0 20px;overflow-wrap:anywhere}
+.popupcard177 button.primary{border:1px solid #fff0b233;border-radius:18px;min-height:48px;background:linear-gradient(120deg,#ffe599,#ffd05f);color:#211b0e;margin-top:8px}
+.popupcard177 button.pill{background:#ffffff08;border:1px solid #ffffff20;border-radius:18px;min-height:46px;width:100%;margin-top:10px!important}
+.popupclose177{position:absolute;right:13px;top:13px;display:grid;place-items:center;padding:0;width:34px;height:34px;line-height:0;border-radius:50%;border:1px solid #ffffff15;background:#ffffff09;color:#bbc2cc}
+.popupclose177 svg{width:20px;height:20px;display:block;margin:0}
+.popupcard177 .deleteconfirm95{padding:0!important;text-align:left}
+.popupcard177 textarea{min-height:100px;max-height:180px;background:#ffffff07;border:1px solid #ffffff25;border-radius:16px;resize:vertical}
+.popupcard177 .tapemblem95{width:46px;height:46px;margin:0 0 14px}
+body:has(.popup177){overflow:hidden}
+@media(prefers-reduced-motion:no-preference){.popupcard177{animation:popupenter177 .16s ease-out}@keyframes popupenter177{from{opacity:0;transform:translateY(9px) scale(.98)}to{opacity:1;transform:none}}}
