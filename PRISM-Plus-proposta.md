@@ -6,12 +6,12 @@
 | --- | --- | --- |
 | Foto visualizzabili una sola volta | 2 invii al giorno | Invii illimitati |
 | Conferme di lettura | Non disponibili | Incluse con il servizio online |
-| Raggio utenti e storie | Fino a 5 km | Fino a 50 km |
+| Raggio utenti e storie | Fino a 40 km | Fino a 150 km |
 | Album personali | 1 album | 2 album |
 | Foto per album | Massimo 6 | Massimo 6 |
 | Visite al profilo | 5 profili più recenti visibili | Tutti i profili visibili |
 
-I raggi di 5 e 50 km sono una scelta iniziale modificabile. Prezzo iniziale proposto: 5,99 € al mese. Nessun prodotto a pagamento è stato configurato.
+I raggi di 5 e 150 km sono una scelta iniziale modificabile. Prezzo iniziale proposto: 5,99 € al mese. Nessun prodotto a pagamento è stato configurato.
 
 ## Album e ritorno al Free
 
