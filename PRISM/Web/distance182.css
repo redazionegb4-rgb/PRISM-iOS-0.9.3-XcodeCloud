@@ -1,0 +1,54 @@
+/* Reserve the measured menu area; never let distance actions sit behind it. */
+html body.prismglass134 .overlay.range121{
+ top:env(safe-area-inset-top,0px)!important;
+ bottom:var(--nav-clearance173,104px)!important;
+ height:auto!important;min-height:0!important;
+ padding:0!important;z-index:80!important;
+ display:flex!important;align-items:flex-end!important;overflow:hidden!important;
+}
+html body.prismglass134:has(.overlay.range121) #nav{
+ display:flex!important;z-index:90!important;pointer-events:auto!important;
+}
+html body.prismglass134 .range121 .rangesheet121{
+ display:flex!important;flex-direction:column!important;
+ width:100%!important;height:100%!important;max-height:560px!important;
+ min-height:0!important;overflow:hidden!important;
+ background:#11161f!important;
+}
+html body.prismglass134 .range121 .rangesheet121 .toolbar98{
+ flex:0 0 auto!important;position:relative!important;
+}
+html body.prismglass134 .range121 .rangecontent121{
+ flex:1 1 0!important;min-height:0!important;
+ overflow-y:auto!important;overflow-x:hidden!important;
+ padding:20px 20px 14px!important;
+}
+html body.prismglass134 .range121 .rangefooter121{
+ position:relative!important;inset:auto!important;
+ display:grid!important;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)!important;
+ gap:10px!important;flex:0 0 auto!important;
+ padding:14px 18px!important;margin:0!important;
+ visibility:visible!important;opacity:1!important;
+ background:#11161f!important;border-top:1px solid #ffffff15!important;
+ z-index:2!important;
+}
+html body.prismglass134 .range121 .rangefooter121 button{
+ display:flex!important;justify-content:center!important;align-items:center!important;
+ width:100%!important;min-width:0!important;min-height:50px!important;
+ padding:12px 10px!important;border-radius:25px!important;
+ font-size:12px!important;line-height:1.35!important;text-align:center!important;
+ margin:0!important;touch-action:manipulation;
+}
+html body.prismglass134 .range121 .rangefooter121 .distancereset182{
+ background:#ffffff08!important;border:1px solid #ffffff26!important;
+ color:#d4d9e3!important;font-weight:600!important;
+}
+html body.prismglass134 .range121 .resethelp182{
+ margin:10px 3px 0!important;font-size:11px!important;
+ color:#96a0af!important;line-height:1.5!important;
+}
+@media(max-height:420px){
+ html body.prismglass134 .range121 .rangecontent121{padding:12px 16px!important}
+ html body.prismglass134 .range121 .rangefooter121{padding:10px 16px!important}
+ html body.prismglass134 .range121 .rangesheet121 .toolbar98{padding:12px 16px!important}
+}
