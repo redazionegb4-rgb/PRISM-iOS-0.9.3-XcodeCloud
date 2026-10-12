@@ -1,0 +1,16 @@
+html body:has(.chatpage) #nav,html body:has(.overlay.lives139) #nav{display:flex!important;z-index:90!important;pointer-events:auto!important}
+html body .overlay.chatpage{height:var(--chat-height201,auto)!important;z-index:80!important;min-height:0!important;padding:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;box-sizing:border-box}
+html body .chatpage .chatbody{flex:1 1 0!important;min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain}
+html body .chatpage .chatcomposer{flex:0 0 auto!important;position:relative!important;bottom:auto!important;margin:0!important;padding-bottom:8px!important}
+html body .overlay.lives139{z-index:80!important;min-height:0!important;padding:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;box-sizing:border-box;background:#090c10!important}
+html body .lives139 .liveshell139{display:flex!important;flex-direction:column!important;height:100%!important;min-height:0!important;overflow:hidden!important;flex:1 1 0!important}
+html body .lives139 .toolbar98{flex:0 0 auto!important;position:relative!important}
+html body .lives139 .livecontent139{display:block!important;flex:1 1 0!important;min-height:0!important;height:auto!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch;touch-action:pan-y;overscroll-behavior:contain;padding:18px 20px 24px!important;scroll-padding-bottom:24px}
+html body .livecreate139 [type=submit]{min-height:48px!important;display:flex;align-items:center;justify-content:center;margin:18px 0 8px!important}
+html body:has(.overlay.lives139) #app{visibility:hidden!important;pointer-events:none!important}
+html body .my98 .mytiles98{grid-template-columns:1fr!important}
+html body .privacy100 .privacyrow100>.privacyicon201{display:grid!important;place-items:center!important;flex:0 0 36px!important;width:36px!important;height:36px!important;border-radius:12px;background:linear-gradient(140deg,#ffd67817,#ffffff05);border:1px solid #ffd67820;margin:0 12px 0 0;color:#f5cf7d}
+html body .privacy100 .privacyicon201 svg{width:19px!important;height:19px!important;flex:none!important;display:block;margin:0!important}
+html body .privacy100 .privacyrow100{align-items:center!important}
+html body .privacy100 .privacysection100>h2,html body .privacy100 .blockedheading100>h2{display:flex;align-items:center;gap:10px}
+html body .privacy100 .privacysection100>h2 svg,html body .privacy100 .blockedheading100>h2 svg{width:19px;height:19px;flex-shrink:0;color:#f5cf7d}
