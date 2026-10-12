@@ -17,7 +17,7 @@
  function showNext(){
   if(!O.me||document.querySelector('.popup177,.mediasheet150,.privatecall149,.live-room')||document.activeElement?.matches('input,textarea')||window.prismMaintenance147)return;
   const item=items.find(p=>!dismissed.has(p.photo_hash));if(!item)return;
-  const popup=popup177('<p class="revieweyebrow198">LA TUA FOTO PROFILO</p><h2>Questa foto non è stata approvata.</h2><div class="rejectedphoto198"><img src="'+esc(item.photo)+'" alt="La foto rifiutata del tuo profilo"></div><p class="reviewreason198">'+esc(item.note||'La foto non rispetta le regole delle foto pubbliche.')+'</p><p>Eliminala per liberare uno spazio nel profilo e caricare una nuova foto.</p><p class="reviewerror198" role="alert"></p><div class="reviewactions198"><button type="button" class="primary" data-remove-photo198>Elimina dal profilo</button><button type="button" class="pill" data-later-photo198>Più tardi</button></div>','photo-review198');
+  const popup=popup177('<h2>Foto non approvata</h2><div class="rejectedphoto198"><img src="'+esc(item.photo)+'" alt="La foto rifiutata del tuo profilo"></div><p class="reviewreason198">'+esc(item.note||'La foto non rispetta le regole delle foto pubbliche.')+'</p><p class="reviewhint199">Eliminala per aggiungere una nuova foto.</p><p class="reviewerror198" role="alert"></p><div class="reviewactions198"><button type="button" class="primary" data-remove-photo198>Elimina dal profilo</button><button type="button" class="pill" data-later-photo198>Più tardi</button></div>','photo-review198');
   dismissed.add(item.photo_hash);
   popup.querySelector('[data-later-photo198]').onclick=()=>{closePopup177(popup)};
   popup.querySelector('[data-remove-photo198]').onclick=async()=>{
