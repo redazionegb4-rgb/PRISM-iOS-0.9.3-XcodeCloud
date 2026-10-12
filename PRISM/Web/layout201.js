@@ -25,11 +25,12 @@
    if(h.querySelector('svg'))continue;const name=/notifiche/i.test(h.textContent)?'bell201':/suoni/i.test(h.textContent)?'sound201':/blocc/i.test(h.textContent)?'block':'eye201';h.insertAdjacentHTML('afterbegin',icon(name));
   }
  }
+ let liveHeight213=0;
  function layout201(){
   const chat=document.querySelector('.chatpage'),live=document.querySelector('.overlay.lives139');
   if(chat)fitChatViewportOnline();
-  else if(live){const box=usable201();live.style.setProperty('top',box.top+'px','important');live.style.setProperty('height',box.height+'px','important');live.style.setProperty('bottom','auto','important')}
-  else document.querySelector('#nav')?.style.removeProperty('bottom');
+  else if(live){const editing=live.contains(document.activeElement)&&/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);if(!editing)liveHeight213=Math.max(liveHeight213,innerHeight,window.visualViewport?.height||0);const keyboard=editing&&Math.max(innerHeight,liveHeight213)-(window.visualViewport?.height||innerHeight)>120;document.body.classList.toggle('live-keyboard213',keyboard);const box=usable201();live.style.setProperty('top',box.top+'px','important');live.style.setProperty('height',box.height+'px','important');live.style.setProperty('bottom','auto','important');if(keyboard){const field=document.activeElement,area=live.querySelector('.livecontent139');if(area&&area.contains(field)){const r=field.getBoundingClientRect(),a=area.getBoundingClientRect();if(r.bottom>a.bottom-12||r.top<a.top+12)field.scrollIntoView({block:'nearest',inline:'nearest'})}}}
+  else {liveHeight213=0;document.body.classList.remove('live-keyboard213');document.querySelector('#nav')?.style.removeProperty('bottom')}
   tidyMe201();privacy201();
  }
  const me=renderMe;renderMe=function(...args){const result=me(...args);tidyMe201();return result};
