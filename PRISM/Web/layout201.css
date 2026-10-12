@@ -1,4 +1,4 @@
-html body:has(.chatpage) #nav,html body:has(.overlay.lives139) #nav{display:flex!important;z-index:90!important;pointer-events:auto!important}
+html body:has(.overlay.lives139) #nav{display:flex!important;z-index:90!important;pointer-events:auto!important}
 html body .overlay.chatpage{height:var(--chat-height201,auto)!important;z-index:80!important;min-height:0!important;padding:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;box-sizing:border-box}
 html body .chatpage .chatbody{flex:1 1 0!important;min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain}
 html body .chatpage .chatcomposer{flex:0 0 auto!important;position:relative!important;bottom:auto!important;margin:0!important;padding-bottom:8px!important}
@@ -14,3 +14,5 @@ html body .privacy100 .privacyicon201 svg{width:19px!important;height:19px!impor
 html body .privacy100 .privacyrow100{align-items:center!important}
 html body .privacy100 .privacysection100>h2,html body .privacy100 .blockedheading100>h2{display:flex;align-items:center;gap:10px}
 html body .privacy100 .privacysection100>h2 svg,html body .privacy100 .blockedheading100>h2 svg{width:19px;height:19px;flex-shrink:0;color:#f5cf7d}
+
+html body.prismglass134:has(.chatpage) #nav,html body:has(.chatpage) #nav{display:none!important;pointer-events:none!important}

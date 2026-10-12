@@ -8,6 +8,7 @@
    nav.style.setProperty('bottom','calc('+ (Math.max(0,innerHeight-bottom)+10)+'px + env(safe-area-inset-bottom,0px))','important');
    return {top,height:Math.max(120,Math.min(bottom,nav.getBoundingClientRect().top-8)-top)};
   }
+  if(document.querySelector('.chatpage'))nav?.style.removeProperty('bottom');
   return {top,height};
  }
  fitChatViewportOnline=function(){fit();const page=document.querySelector('.chatpage');if(!page)return;const box=usable201();page.style.setProperty('top',box.top+'px','important');page.style.setProperty('--chat-height201',box.height+'px');page.style.setProperty('height',box.height+'px','important');page.style.setProperty('bottom','auto','important')};
