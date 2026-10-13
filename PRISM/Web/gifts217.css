@@ -1,0 +1,8 @@
+/* Both cards share geometry; prevent album span-2 from creating an implicit track. */
+.mytiles98{grid-template-columns:minmax(0,1fr)!important}
+.mytiles98>.mytile98.album98,.mytiles98>.mytile98.giftentry215{grid-column:1/-1!important;display:flex!important;flex-direction:row!important;align-items:center!important;gap:13px!important;width:auto!important;min-width:0!important;min-height:76px!important;padding:18px!important;box-sizing:border-box!important;border-radius:24px!important;background:var(--surface167)!important;border:1px solid #ffffff15!important;border-top-color:#ffffff30!important;text-align:left!important}
+.mytiles98>.mytile98.album98>.icon:first-child,.mytiles98>.mytile98.giftentry215>.icon:first-child{width:24px!important;height:24px!important;flex:none!important;margin:0!important;padding:0!important;background:none!important;color:#ffda83!important}
+.mytiles98>.mytile98.album98>.copy,.mytiles98>.mytile98.giftentry215>.copy{display:flex!important;flex-direction:column!important;gap:5px!important;flex:1!important;min-width:0!important}
+.mytiles98>.mytile98.album98>.copy b,.mytiles98>.mytile98.giftentry215>.copy b{font-size:14px!important;line-height:1.4!important;margin:0!important}
+.mytiles98>.mytile98.album98>.copy small,.mytiles98>.mytile98.giftentry215>.copy small{font-size:11px!important;line-height:1.55!important;margin:0!important;overflow-wrap:anywhere;color:#a8b1bf!important}
+.mytiles98>.mytile98.album98>.icon:last-child,.mytiles98>.mytile98.giftentry215>.icon:last-child{width:19px!important;height:19px!important;flex:none!important;margin:0 0 0 auto!important;padding:0!important;background:none!important;color:#d8bd85!important}
