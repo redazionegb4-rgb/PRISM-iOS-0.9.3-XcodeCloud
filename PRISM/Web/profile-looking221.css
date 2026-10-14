@@ -1,0 +1,14 @@
+html body .editor98 .lookingchoices221{display:grid!important;grid-template-columns:1fr!important;gap:8px!important;margin:14px 0 0!important;visibility:visible!important;opacity:1!important;min-height:0}
+html body .editor98 .lookingchoices221 .lookingchoice221{display:flex!important;align-items:center!important;gap:12px!important;position:relative;padding:13px 14px!important;min-height:50px!important;margin:0!important;background:#ffffff05!important;border:1px solid #ffffff20!important;border-radius:15px!important;color:#c9cdd5!important;font-size:14px!important;cursor:pointer;visibility:visible!important;opacity:1!important}
+.lookingcaption221{display:flex!important;align-items:center;gap:12px;flex:1;min-width:0}.lookingcaption221>span{min-width:0;overflow-wrap:anywhere}.lookingcaption221 .profileicon220{color:#edc47c;width:21px;height:21px}
+/* Older glass rules style every descendant span; only the outer profile chip should have a surface. */
+html body.prismglass134 :is(.my98,.public99,.editor98) .profilecaption220.profilecaption220,
+html body.prismglass134 :is(.my98,.public99,.editor98) .profilecaption220.profilecaption220>span{
+ background:transparent!important;border:0!important;box-shadow:none!important;
+ backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+ border-radius:0!important;padding:0!important;margin:0!important;
+ color:inherit!important;font-size:inherit!important;font-weight:inherit!important;
+}
+html body .editor98 .lookingchoices221 input{position:absolute!important;inset:0!important;opacity:0!important;margin:0!important;width:100%!important;height:100%!important;padding:0!important;z-index:1;cursor:pointer}
+.lookingcheck221{display:grid;place-items:center;flex:0 0 23px;width:23px;height:23px;border:1.5px solid #a5afbf;border-radius:8px;pointer-events:none}.lookingcheck221 .icon{opacity:0;width:16px;height:16px}
+html body .editor98 .lookingchoice221:has(input:checked){border-color:#edc47c80!important;background:#edc47c10!important;color:#ffe0a2!important}.lookingchoice221 input:checked~.lookingcheck221{background:#edc47c;border-color:#edc47c;color:#231b0c}.lookingchoice221 input:checked~.lookingcheck221 .icon{opacity:1}.lookingchoice221 input:focus-visible~.lookingcheck221{outline:2px solid #edc47c;outline-offset:3px}
