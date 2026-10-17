@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>app.prism.dating</string>
+	<string>app.prism.admin</string>
 	<key>PROJECT_ID</key>
 	<string>prism-78dd7</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:648373917801:ios:e7bea670cdef1f992aaaf8</string>
+	<string>1:648373917801:ios:7c583d0140c3f8fb2aaaf8</string>
 </dict>
 </plist>
