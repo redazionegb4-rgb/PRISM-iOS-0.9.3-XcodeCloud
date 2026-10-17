@@ -1,28 +1,47 @@
 import UIKit
-import SwiftUI
 import UserNotifications
 import FirebaseCore
 import FirebaseMessaging
 
-@main class AppDelegate:UIResponder,UIApplicationDelegate,UNUserNotificationCenterDelegate,MessagingDelegate {
- let store=AdminStore()
- private var lastEvent:String?
- func application(_ application:UIApplication,didFinishLaunchingWithOptions options:[UIApplication.LaunchOptionsKey:Any]?) -> Bool {
-  FirebaseApp.configure();Messaging.messaging().delegate=self;UNUserNotificationCenter.current().delegate=self
-  UNUserNotificationCenter.current().requestAuthorization(options:[.alert,.badge,.sound]){_,_ in DispatchQueue.main.async{application.registerForRemoteNotifications()}}
-  return true
- }
- func application(_ application:UIApplication,configurationForConnecting session:UISceneSession,options:UIScene.ConnectionOptions)->UISceneConfiguration{let c=UISceneConfiguration(name:"Prism Admin",sessionRole:session.role);c.sceneClass=UIWindowScene.self;c.delegateClass=AdminSceneDelegate.self;return c}
- func application(_ application:UIApplication,didRegisterForRemoteNotificationsWithDeviceToken token:Data){Messaging.messaging().apnsToken=token}
- func messaging(_ messaging:Messaging,didReceiveRegistrationToken token:String?){guard let token=token else{return};UserDefaults.standard.set(token,forKey:"adminFCMToken");Task{@MainActor in await store.syncPush()}}
- func open(_ response:UNNotificationResponse){let data=response.notification.request.content.userInfo;guard let section=data["section"] as? String else{return};let event=data["event"] as? String ?? response.notification.request.identifier;guard event != lastEvent else{return};lastEvent=event;store.open(section)}
- func userNotificationCenter(_ center:UNUserNotificationCenter,willPresent notification:UNNotification,withCompletionHandler completion:@escaping(UNNotificationPresentationOptions)->Void){Task{@MainActor in await store.refreshCounts()};completion([.banner,.sound,.badge])}
- func userNotificationCenter(_ center:UNUserNotificationCenter,didReceive response:UNNotificationResponse,withCompletionHandler completion:@escaping()->Void){DispatchQueue.main.async{self.open(response);completion()}}
+@main
+final class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        FirebaseApp.configure()
+        Messaging.messaging().delegate = self
+        UNUserNotificationCenter.current().delegate = self
+        return true
+    }
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) { Messaging.messaging().apnsToken = deviceToken }
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) { UserDefaults.standard.set(fcmToken,forKey:"prismPushToken") }
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) { completionHandler([]) }
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        let data=response.notification.request.content.userInfo
+        var clean:[String:String]=[:]
+        for key in ["kind","target","recipient","event"] { if let value=data[key] as? String { clean[key]=value } }
+        UserDefaults.standard.set(clean,forKey:"prismPushPending")
+        completionHandler()
+    }
+
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        let configuration = UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+        configuration.sceneClass = UIWindowScene.self
+        configuration.delegateClass = PrismSceneDelegate.self
+        return configuration
+    }
 }
-final class AdminSceneDelegate:UIResponder,UIWindowSceneDelegate {
- var window:UIWindow?
- func scene(_ scene:UIScene,willConnectTo session:UISceneSession,options:UIScene.ConnectionOptions){guard let scene=scene as? UIWindowScene,let app=UIApplication.shared.delegate as? AppDelegate else{return};let window=UIWindow(windowScene:scene);window.rootViewController=UIHostingController(rootView:NativeAdminRoot(store:app.store));self.window=window;window.makeKeyAndVisible();if let response=options.notificationResponse{app.open(response)}}
- func sceneDidBecomeActive(_ scene:UIScene){guard let app=UIApplication.shared.delegate as? AppDelegate else{return};app.store.resume();Task{await app.store.refreshCounts();await app.store.syncPush()}}
- func sceneWillResignActive(_ scene:UIScene){(UIApplication.shared.delegate as? AppDelegate)?.store.pause()}
- func sceneDidDisconnect(_ scene:UIScene){(UIApplication.shared.delegate as? AppDelegate)?.store.pause();window=nil}
+
+// Kept in this existing target source so no .pbxproj changes are needed.
+@objc(PrismSceneDelegate)
+final class PrismSceneDelegate: UIResponder, UIWindowSceneDelegate {
+    var window: UIWindow?
+
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        guard let windowScene = scene as? UIWindowScene else { return }
+        let window = UIWindow(windowScene: windowScene)
+        window.overrideUserInterfaceStyle = .dark
+        window.backgroundColor = UIColor(red: 9.0/255, green: 11.0/255, blue: 14.0/255, alpha: 1)
+        window.rootViewController = PrismViewController()
+        self.window = window
+        window.makeKeyAndVisible()
+    }
 }
