@@ -10,6 +10,9 @@ python3 - "$PRISM_ROOT" <<'PY'
 import os, re, sys
 from pathlib import Path
 root = Path(sys.argv[1])
+delegate = root / 'PRISM' / 'AppDelegate.swift'
+if delegate.is_file() and any(name in delegate.read_text() for name in ('AdminStore', 'NativeAdminRoot')):
+    raise SystemExit('PRISM: nel repository utenti è presente AppDelegate di Prism Admin. Ripristina il progetto Prism utenti completo.')
 config = root / 'Config' / 'App.xcconfig'
 if not config.is_file():
     raise SystemExit('PRISM: Config/App.xcconfig non trovato. Mantieni ci_scripts e Config alla radice del progetto.')

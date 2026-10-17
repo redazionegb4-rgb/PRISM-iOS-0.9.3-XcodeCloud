@@ -209,9 +209,15 @@ final class PrismViewController: UIViewController, WKScriptMessageHandlerWithRep
                 guard error == nil, let http = response as? HTTPURLResponse, let data = data, data.count <= 67108864 else { reply(["status": 0, "data": ["detail": "Connessione non disponibile. Controlla la rete e riprova."]], nil); return }
                 var payload = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] ?? [:]
                 if http.statusCode == 200 && path == "/v1/notifications", let counts = payload["counts"] as? [String:Any] {
-                    let total = ["message","tap","visit"].reduce(0) { $0 + max(0,(counts[$1] as? NSNumber)?.intValue ?? 0) }
+                    let total = ["message","tap","visit","verification"].reduce(0) { $0 + max(0,(counts[$1] as? NSNumber)?.intValue ?? 0) }
                     UNUserNotificationCenter.current().setBadgeCount(total)
                     if total == 0 { UNUserNotificationCenter.current().removeAllDeliveredNotifications() }
+                    else if ((counts["verification"] as? NSNumber)?.intValue ?? 0) == 0 {
+                        UNUserNotificationCenter.current().getDeliveredNotifications { delivered in
+                            let resolved = delivered.filter { $0.request.content.userInfo["kind"] as? String == "verification" }.map { $0.request.identifier }
+                            UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers:resolved)
+                        }
+                    }
                 }
                 if http.statusCode == 200 && path == "/v1/auth/login" {
                     guard let token = payload["access_token"] as? String else { reply(nil, "Sessione non disponibile"); return }
